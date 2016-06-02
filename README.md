@@ -17,5 +17,6 @@ So it combines the power of SharpMap with the Look&Feel of modern widgets.
 ### ToDos
 * Add interaction (picking)
 * Enabling/disabling SharpMap layers
+* Some dynamic filtering and styling
 * Better sample data sources
 * More docs
