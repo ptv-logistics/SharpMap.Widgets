@@ -144,6 +144,7 @@
     <Content Include="Data\Shape\world_countries_boundary_file_world_2002.shx" />
     <Content Include="Data\Poi\p_fd7.ini" />
     <Content Include="Data\Poi\p_fd7.poi" />
+    <Content Include="SharpMapOverlayHandler.ashx" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -176,6 +177,9 @@
     </Compile>
     <Compile Include="..\SharpMap.Win\LayerFactories.cs">
       <Link>LayerFactories.cs</Link>
+    </Compile>
+    <Compile Include="SharpMapOverlayHandler.ashx.cs">
+      <DependentUpon>SharpMapOverlayHandler.ashx</DependentUpon>
     </Compile>
     <Compile Include="SharpMapTilesHandler.ashx.cs">
       <DependentUpon>SharpMapTilesHandler.ashx</DependentUpon>

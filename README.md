@@ -13,6 +13,5 @@ What the project shows
 + Sharing your map business-code between web and desktop applications
 
 ToDos
-* Display POIs in the web-sample
 * Add interaction (picking)
 * More docs

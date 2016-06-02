@@ -54,6 +54,15 @@
 	    });
         map.addLayer(myTileLayer);
 
+        // add dymamic tile layer
+        var myOverlayLayer = new L.NonTiledLayer.WMS('SharpMapOverlayHandler.ashx', {
+            opacity: 1.0,
+            layers: '',
+            format: 'image/png',
+            transparent: true
+        });
+        map.addLayer(myOverlayLayer);
+
         // returns a layer group for xmap back- and foreground layers
         function getLayers(url, style, attribution) {
             var background = new L.TileLayer.WMS(url, {
@@ -62,7 +71,7 @@
                 opacity: 1.0,
                 noWrap: true,
                 layers: style? 'xmap-' + style + '-bg' : 'xmap-ajaxbg',
-                format: 'image/gif',
+                format: 'image/png',
                 transparent: false,
                 attribution: attribution
             });
@@ -71,7 +80,7 @@
                 zIndex: 0,
                 opacity: 1.0,
                 layers: style? 'xmap-' + style + '-fg' : 'xmap-ajaxfg',
-                format: 'image/gif',
+                format: 'image/png',
                 transparent: true,
                 attribution: attribution
             });
