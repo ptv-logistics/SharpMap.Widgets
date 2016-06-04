@@ -5,7 +5,7 @@
     <title>Leaflet SharpMap Example</title>
     <meta content="yes" name="apple-mobile-web-app-capable">
     <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
-    <link href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" rel="stylesheet">
+    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v1.0.0-rc.1/leaflet.css" />
     <style>
         body {
             padding: 0;
@@ -22,13 +22,17 @@
 
 <body>
     <div id="map" />
-    <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+    <script src="http://cdn.leafletjs.com/leaflet/v1.0.0-rc.1/leaflet.js"></script>
     <script src="./NonTiledLayer.js"></script>
     <script src="./NonTiledLayer.WMS.js"></script>
     <script src="./token.js"></script>
     <script>
         // initialize leaflet
-        var map = new L.Map('map');
+        var map = new L.Map('map',
+        {
+            worldCopyJump: true,
+            zoomSnap: 0.125
+        });
 
         // center Karlsruhe
         map.setView(new L.LatLng(50, 10), 6);
@@ -45,8 +49,6 @@
             "PTV silkysand": getLayers(xMapUrl + '/WMS/WMS', "silkysand", xMapAttribution)
         };
 
-        L.control.layers(baseLayers, null).addTo(map);
-
         // add dymamic tile layer
         var myTileLayerUrl = 'SharpMapTilesHandler.ashx?x={x}&y={y}&z={z}',
 	    myTileLayer = new L.TileLayer(myTileLayerUrl, {
@@ -56,12 +58,16 @@
 
         // add dymamic tile layer
         var myOverlayLayer = new L.NonTiledLayer.WMS('SharpMapOverlayHandler.ashx', {
+            zIndex: 1,
             opacity: 1.0,
             layers: '',
             format: 'image/png',
             transparent: true
         });
         map.addLayer(myOverlayLayer);
+
+        L.control.layers(baseLayers, {"countries": myTileLayer, "POIs": myOverlayLayer}, { autoZIndex: false }).addTo(map);
+
 
         // returns a layer group for xmap back- and foreground layers
         function getLayers(url, style, attribution) {
@@ -82,7 +88,7 @@
                 layers: style? 'xmap-' + style + '-fg' : 'xmap-ajaxfg',
                 format: 'image/png',
                 transparent: true,
-                attribution: attribution
+                attribution: attribution,
             });
 
             return L.layerGroup([background, foreground]);
