@@ -1,7 +1,7 @@
 # SharpMap.Widgets
 Build responsive map applications for web and desktop
 
-<iframe width="950" height="540" src="http://80.146.239.139/SharpMap.Widgets/" frameborder="0" allowfullscreen></iframe>
+[Web-Sample](http://80.146.239.139/SharpMap.Widgets/)
 
 [SharpMap](https://github.com/SharpMap/SharpMap) is a powerful mapping library that supports many standards and formats.
 But the interactive Web- and Windows-Widgets of the SharpMap project are not up to date.
