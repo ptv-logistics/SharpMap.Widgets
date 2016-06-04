@@ -201,8 +201,8 @@
       <Link>Data\Poi\p_fd7.ini</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\SharpMap.Web\Data\Poi\p_fd7.poi">
-      <Link>Data\Poi\p_fd7.poi</Link>
+    <Content Include="..\SharpMap.Web\Data\Poi\p_fd7.mdb">
+      <Link>Data\Poi\p_fd7.mdb</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="..\SharpMap.Web\Data\Shape\world_countries_boundary_file_world_2002.dbf">
