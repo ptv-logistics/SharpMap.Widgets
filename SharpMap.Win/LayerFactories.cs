@@ -15,7 +15,7 @@ namespace Widgets
 {
     public static class LayerFactories
     {
-        public static IEnumerable<SharpMap.Layers.ILayer> BgFactory(SharpMap.Map sharpMap)
+        public static IEnumerable<SharpMap.Layers.ILayer> BgFactory(SharpMap.Map sharpMap = null)
         {
             var x = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Data", "Shape", "world_countries_boundary_file_world_2002.shp");
 
@@ -34,12 +34,12 @@ namespace Widgets
             };
         }
 
-        public static IEnumerable<SharpMap.Layers.ILayer> FgFactory(SharpMap.Map sharpMap)
+        public static IEnumerable<SharpMap.Layers.ILayer> FgFactory(SharpMap.Map sharpMap = null)
         {
             // insert address monitor layers
             var rootPath = System.AppDomain.CurrentDomain.BaseDirectory + "Data\\Poi";
             var bitmapPath = rootPath + "\\Bitmaps";
-            string[] poiFiles = System.IO.Directory.GetFiles(rootPath, "*.poi");
+            string[] poiFiles = System.IO.Directory.GetFiles(rootPath, "*.mdb");
             foreach (string poiFile in poiFiles)
             {
                 var layer = AMLayerFactory.CreateLayer(poiFile, bitmapPath);

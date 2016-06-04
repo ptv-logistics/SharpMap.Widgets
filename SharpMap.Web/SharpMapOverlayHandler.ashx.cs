@@ -1,12 +1,11 @@
-﻿using Widgets;
-using GeoAPI.Geometries;
+﻿using GeoAPI.Geometries;
 using System;
 using System.Drawing;
-using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Globalization;
 using System.IO;
 using System.Web;
+using Widgets;
 
 namespace SpatialTutorial
 {
@@ -15,7 +14,6 @@ namespace SpatialTutorial
     /// </summary>
     public class SharpMapOverlayHandler : IHttpHandler
     {
-        // http://msdn.microsoft.com/en-us/library/bb259689.aspx
         public void ProcessRequest(HttpContext context)
         {
             int width, height;
@@ -30,14 +28,14 @@ namespace SpatialTutorial
             if (!int.TryParse(context.Request.Params["height"], out height))
                 throw (new ArgumentException("Invalid parameter"));
 
-            // create a transparent sharpmap map with a size of 256x256
+            // create a transparent sharpmap map with a size of the requested size
             using (var sharpMap = new SharpMap.Map(new Size(width, height)) { BackColor = Color.Transparent })
             {
                 // add the layer to the map
                 foreach (var l in LayerFactories.FgFactory(sharpMap))
                     sharpMap.Layers.Add(l);
 
-                // calculate the bbox for the tile key and zoom the map 
+                // zoom to the requested envelope 
                 sharpMap.ZoomToBox(envelope);
 
                 // render the map image
@@ -56,24 +54,6 @@ namespace SpatialTutorial
                     context.Response.OutputStream.Write(buffer, 0, buffer.Length);
                 }
             }
-        }
-
-        public const double EarthRadius = 6378137.0;
-
-        /// <summary> Calculates a Mercator bounding box for a tile key. </summary>
-        /// <param name="tileX"> The tile x coordinate in PTV-internal format. </param>
-        /// <param name="tileY"> The tile y coordinate in PTV-internal format. </param>
-        /// <param name="zoom"> The zoom level. </param>
-        /// <returns> A bounding box in Mercator format which corresponds to the given tile coordinates and zoom level. </returns>
-        public static Envelope TileToMercatorAtZoom(int tileX, int tileY, int zoom)
-        {
-            const double earthCircum = EarthRadius * 2.0 * Math.PI;
-            const double earthHalfCircum = earthCircum / 2;
-            double arc = earthCircum / (1 << zoom);
-
-            return new Envelope(
-                (tileX * arc) - earthHalfCircum, ((tileX + 1) * arc) - earthHalfCircum,
-                earthHalfCircum - ((tileY + 1) * arc), earthHalfCircum - (tileY * arc));
         }
 
         public bool IsReusable

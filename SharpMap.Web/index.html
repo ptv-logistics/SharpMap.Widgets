@@ -22,6 +22,7 @@
 
 <body>
     <div id="map" />
+    <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
     <script src="http://cdn.leafletjs.com/leaflet/v1.0.0-rc.1/leaflet.js"></script>
     <script src="./NonTiledLayer.js"></script>
     <script src="./NonTiledLayer.WMS.js"></script>
@@ -93,6 +94,61 @@
 
             return L.layerGroup([background, foreground]);
         }
+
+        // add click handler
+        map.on('click', function onMapClick(e) {
+            $.ajax({
+                url: "SharpMapPickHandler.ashx?lat=" + e.latlng.lat + "&lng=" + e.latlng.lng + "&z=" + map.getZoom(),
+                type: "GET",
+                success: function (data, status, xhr) {
+                    displayResult(data, e.latlng);
+                }
+            });
+        });
+
+        var pickedFeature;
+        var popup = L.popup();
+
+        function displayResult(pickedPolygon, latlng) {
+            if (pickedFeature)
+                map.removeLayer(pickedFeature);
+
+            //var feature = {
+            //    "type": "Feature",
+            //    "properties": {
+            //        "style": {
+            //            weight: 4, color: "#222", opacity: 1,
+            //            fillColor: "#fff", fillOpacity: 0.5
+            //        }
+            //    }
+            //};
+
+            //feature.geometry = pickedPolygon.geometry;
+
+            pickedFeature = L.geoJson([pickedPolygon], {
+                style: function (feature) {  
+                    var x = {
+                        weight: 4, color: "#222", opacity: 1,
+                        fillColor: "#fff", fillOpacity: 0.5
+                    }
+                    return x;
+                }
+            }).addTo(map);
+
+            var popupText = '';
+            for(var key in pickedPolygon.properties) {
+                popupText = popupText.concat('<b>', key, ':</b> ', pickedPolygon.properties[key], '<br>');
+            }
+
+            if (pickedPolygon.geometry.type == 'Point') {
+                pickedFeature.bindPopup(popupText).openPopup();
+            }
+            else {
+                popup.setLatLng(latlng)
+                    .setContent(popupText)
+                    .openOn(map);
+            }
+        };
 
     </script>
 </body>

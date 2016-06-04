@@ -8,7 +8,7 @@ namespace Ptv.Controls.Map.AddressMonitor
     {
         public static void Locate(SharpMap.Map map, string rootPath, string bitmapPath)
         {
-            string[] poiFiles = System.IO.Directory.GetFiles(rootPath, "*.poi");
+            string[] poiFiles = System.IO.Directory.GetFiles(rootPath, "*.mdb");
             foreach (string poiFile in poiFiles)
             {
                 map.Layers.Add(AMLayerFactory.CreateLayer(poiFile, bitmapPath));

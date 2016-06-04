@@ -145,6 +145,7 @@
     <Content Include="Data\Poi\p_fd7.ini" />
     <Content Include="Data\Poi\p_fd7.poi" />
     <Content Include="SharpMapOverlayHandler.ashx" />
+    <Content Include="SharpMapPickHandler.ashx" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -177,6 +178,9 @@
     </Compile>
     <Compile Include="..\SharpMap.Win\LayerFactories.cs">
       <Link>LayerFactories.cs</Link>
+    </Compile>
+    <Compile Include="SharpMapPickHandler.ashx.cs">
+      <DependentUpon>SharpMapPickHandler.ashx</DependentUpon>
     </Compile>
     <Compile Include="SharpMapOverlayHandler.ashx.cs">
       <DependentUpon>SharpMapOverlayHandler.ashx</DependentUpon>

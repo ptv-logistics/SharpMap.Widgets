@@ -15,7 +15,7 @@ So it combines the power of SharpMap with the Look&Feel of modern widgets.
 + Sharing your map business-code between web and desktop applications
 
 ### ToDos
-* Add interaction (picking)
+* Add interaction (picking) for Win-Demo
 * Enabling/disabling SharpMap layers
 * Some dynamic filtering and styling
 * Better sample data sources

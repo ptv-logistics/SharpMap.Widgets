@@ -1,11 +1,10 @@
-﻿using Widgets;
-using GeoAPI.Geometries;
+﻿using GeoAPI.Geometries;
 using System;
 using System.Drawing;
-using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Web;
+using Widgets;
 
 namespace SpatialTutorial
 {
@@ -14,7 +13,6 @@ namespace SpatialTutorial
     /// </summary>
     public class SharpMapTilesHandler : IHttpHandler
     {
-        // http://msdn.microsoft.com/en-us/library/bb259689.aspx
         public void ProcessRequest(HttpContext context)
         {
             int x, y, z;
@@ -35,7 +33,7 @@ namespace SpatialTutorial
                     sharpMap.Layers.Add(l);
 
                 // calculate the bbox for the tile key and zoom the map 
-                sharpMap.ZoomToBox(TileToMercatorAtZoom(x,y,z));
+                sharpMap.ZoomToBox(TileToWebMercatorAtZoom(x,y,z));
 
                 // render the map image
                 using (var img = sharpMap.GetMap())
@@ -62,7 +60,7 @@ namespace SpatialTutorial
         /// <param name="tileY"> The tile y coordinate in PTV-internal format. </param>
         /// <param name="zoom"> The zoom level. </param>
         /// <returns> A bounding box in Mercator format which corresponds to the given tile coordinates and zoom level. </returns>
-        public static Envelope TileToMercatorAtZoom(int tileX, int tileY, int zoom)
+        public static Envelope TileToWebMercatorAtZoom(int tileX, int tileY, int zoom)
         {
             const double earthCircum = EarthRadius * 2.0 * Math.PI;
             const double earthHalfCircum = earthCircum / 2;

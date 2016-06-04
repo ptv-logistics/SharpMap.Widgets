@@ -407,12 +407,12 @@ namespace Ptv.Controls.Map.AddressMonitor
                 (360 / Math.PI) * (Math.Atan(Math.Exp(point.Y / 6371000.0)) - (Math.PI / 4)));
         }
 
-        public Envelope Wgs2SphereMercator(Envelope envelope)
+        public static Envelope Wgs2SphereMercator(Envelope envelope)
         {
             return new Envelope(Wgs2SphereMercator(envelope.TopLeft()), Wgs2SphereMercator(envelope.BottomRight()));
         }
 
-        public Envelope SphereMercator2Wgs(Envelope envelope)
+        public static Envelope SphereMercator2Wgs(Envelope envelope)
         {
             return new Envelope(SphereMercator2Wgs(envelope.TopLeft()), SphereMercator2Wgs(envelope.BottomRight()));
         }

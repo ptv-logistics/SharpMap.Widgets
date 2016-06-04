@@ -26,7 +26,7 @@ namespace Ptv.XServer.Demo.ShapeFile
         /// <param name="tileY"> The tile y coordinate in PTV-internal format. </param>
         /// <param name="zoom"> The zoom level. </param>
         /// <returns> A bounding box in Mercator format which corresponds to the given tile coordinates and zoom level. </returns>
-        public static Envelope TileToMercatorAtZoom(int tileX, int tileY, int zoom)
+        public static Envelope TileToWebMercatorAtZoom(int tileX, int tileY, int zoom)
         {
             const double earthCircum = EarthRadius * 2.0 * Math.PI;
             const double earthHalfCircum = earthCircum / 2;
@@ -62,10 +62,26 @@ namespace Ptv.XServer.Demo.ShapeFile
 
         #region Implementation of ITiledProvider
         #region doc:GetImageStream method
+
         /// <inheritdoc/>
         public Stream GetImageStream(int x, int y, int zoom)
         {
-            return GetImageStream(TileToMercatorAtZoom(x, y, zoom), 256, 256);
+            // convert the tile key to a mercator envelope and render the image
+            return GetImageStream(TileToWebMercatorAtZoom(x, y, zoom), 256, 256);
+        }
+
+        /// <inheritdoc/>
+        public Stream GetImageStream(double left, double top, double right, double bottom, int width, int height)
+        {
+            var envelope = new Envelope(left, right, top, bottom);
+
+            // The bounds for GetImageStream are PTV-Mercator, but for convenience and consistency 
+            // we use SharpMap with Web- (aka Google-) Mercator. So just transform the envelope.
+            var ptvToGoogle = 6378137.0 / 6371000.0;
+            envelope.ExpandBy(ptvToGoogle, ptvToGoogle);
+
+            // now render the imate
+            return GetImageStream(envelope, width, height);
         }
 
         public Stream GetImageStream(Envelope envelope, int width, int height)
@@ -95,16 +111,6 @@ namespace Ptv.XServer.Demo.ShapeFile
             }
         }
 
-        public Stream GetImageStream(double left, double top, double right, double bottom, int width, int height)
-        {
-            var ptvToGoogle = 6378137.0 / 6371000;
-            left *= ptvToGoogle;
-            top *= ptvToGoogle;
-            right *= ptvToGoogle;
-            bottom *= ptvToGoogle;
-
-            return GetImageStream(new Envelope(left, right, top, bottom), width, height);
-        }
         #endregion // doc:GetImageStream method
 
         /// <inheritdoc/>
