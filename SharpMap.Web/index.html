@@ -72,17 +72,13 @@
 
         // returns a layer group for xmap back- and foreground layers
         function getLayers(url, style, attribution) {
-            var background = new L.TileLayer.WMS(url, {
-                maxZoom: 19,
-                minZoom: 0,
-                opacity: 1.0,
-                noWrap: true,
-                layers: style? 'xmap-' + style + '-bg' : 'xmap-ajaxbg',
-                format: 'image/png',
-                transparent: false,
-                attribution: attribution
-            });
-
+            var background = L.tileLayer('https://api{s}-test.cloud.ptvgroup.com/WMS/GetTile/' +
+                (style ? 'xmap-' + style + '-bg' : 'xmap-ajaxbg') + '/{x}/{y}/{z}.png', {
+                    minZoom: 0, maxZoom: 19, opacity: 1.0,
+                    attribution: attribution,
+                    subdomains: '1234'
+                });
+        
             var foreground = new L.NonTiledLayer.WMS(url + '?xtok=' + token, {
                 zIndex: 0,
                 opacity: 1.0,
@@ -94,6 +90,9 @@
 
             return L.layerGroup([background, foreground]);
         }
+
+        // set cursor always interactive
+        $('.leaflet-container').css('cursor', 'pointer');
 
         // add click handler
         map.on('click', function onMapClick(e) {
@@ -113,17 +112,8 @@
             if (pickedFeature)
                 map.removeLayer(pickedFeature);
 
-            //var feature = {
-            //    "type": "Feature",
-            //    "properties": {
-            //        "style": {
-            //            weight: 4, color: "#222", opacity: 1,
-            //            fillColor: "#fff", fillOpacity: 0.5
-            //        }
-            //    }
-            //};
-
-            //feature.geometry = pickedPolygon.geometry;
+            if (!pickedPolygon || !pickedPolygon.geometry)
+                return;
 
             pickedFeature = L.geoJson([pickedPolygon], {
                 style: function (feature) {  
