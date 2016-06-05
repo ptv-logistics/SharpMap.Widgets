@@ -1,6 +1,7 @@
 ﻿using ProjNet.CoordinateSystems;
 using ProjNet.CoordinateSystems.Transformations;
 using Ptv.Controls.Map.AddressMonitor;
+using SharpMap.Data;
 using SharpMap.Layers;
 using SharpMap.Rendering.Thematics;
 using SharpMap.Styles;
@@ -15,7 +16,34 @@ namespace Widgets
 {
     public static class LayerFactories
     {
-        public static IEnumerable<SharpMap.Layers.ILayer> BgFactory(SharpMap.Map sharpMap = null)
+        private static SharpMap.Data.Providers.GeometryFeatureProvider donutProvider;
+        static LayerFactories()
+        {
+            // we createa a dummy data source that contains computed in-memory shapes
+            var donuts = DonutProvider.CreateShapes(100);
+
+            var fdt = new FeatureDataTable();
+            int id = 0;
+            fdt.Columns.Add("Id", typeof(Int32));
+            foreach (var donut in donuts)
+            {
+                var fdr = fdt.NewRow();
+                fdr["Id"] = id++;
+                fdr.Geometry = donut;
+                fdt.AddRow(fdr);
+            }
+
+            // todo: check if the GeometryFeatureProvider uses some quadtree indexing
+            donutProvider = new SharpMap.Data.Providers.GeometryFeatureProvider(fdt);
+        }
+
+        /// <summary>
+        /// Returns a collection of background layers
+        /// These layers are typically areas and are rendered tile-based
+        /// </summary>
+        /// <param name="pixelSize"> the optional map pixel size for dynamic scaling. </param>
+        /// <returns> The collection of layers </returns>
+        public static IEnumerable<SharpMap.Layers.ILayer> BgFactory(double pixelSize = 1)
         {
             var x = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Data", "Shape", "world_countries_boundary_file_world_2002.shp");
 
@@ -30,11 +58,31 @@ namespace Widgets
 
                 // use a dynamic style for thematic mapping
                 // the lambda also takes the map instance into account (to scale the border width)
-                Theme = new CustomTheme(row => GetPopDensStyle(sharpMap.PixelSize, row))
+                Theme = new CustomTheme(row => GetPopDensStyle(pixelSize, row))
+            };
+
+            // the map contains only one layer
+            yield return new VectorLayer("Donuts")
+            {
+                // set tranform to WGS84->Spherical_Mercator
+                CoordinateTransformation = new CoordinateTransformationFactory().CreateFromCoordinateSystems(GeographicCoordinateSystem.WGS84, ProjectedCoordinateSystem.WebMercator),
+
+                // set the sharpmap provider for shape files as data source
+                DataSource = donutProvider,
+
+                // use a dynamic style for thematic mapping
+                // the lambda also takes the map instance into account (to scale the border width)
+                Theme = new CustomTheme(row => GetDonutStyle(pixelSize, row))
             };
         }
 
-        public static IEnumerable<SharpMap.Layers.ILayer> FgFactory(SharpMap.Map sharpMap = null)
+        /// <summary>
+        /// Returns a collection of foreground layers
+        /// These layers are typically symbols and are rendered viewport-based
+        /// </summary>
+        /// <param name="pixelSize"> the optional map pixel size for dynamic scaling. </param>
+        /// <returns> The collection of layers </returns>
+        public static IEnumerable<SharpMap.Layers.ILayer> FgFactory(double pixelSize = 1)
         {
             // insert address monitor layers
             var rootPath = System.AppDomain.CurrentDomain.BaseDirectory + "Data\\Poi";
@@ -46,7 +94,6 @@ namespace Widgets
                 layer.MaxVisible = 9999999999; // override the automatic display threshold
                 yield return layer;
             }
-
         }
 
         #region doc:GetPopDensStyle method
@@ -88,5 +135,23 @@ namespace Widgets
             return new VectorStyle { Outline = pen, EnableOutline = true, Fill = new SolidBrush(fillColor) };
         }
         #endregion //doc:GetPopDensStyle method
+
+        // returns the style for our donuts
+        private static VectorStyle GetDonutStyle(double pixelSize, DataRow row)
+        {
+            var colors = new[] { System.Drawing.Color.Blue, System.Drawing.Color.Green, System.Drawing.Color.Red };
+
+            var brush = new System.Drawing.Drawing2D.HatchBrush(
+                System.Drawing.Drawing2D.HatchStyle.DiagonalCross, colors[((int)row["Id"]) % colors.Length], 
+                Color.White);
+
+            // make fill color alpha-transparent
+//            fillColor = Color.FromArgb(180, fillColor.R, fillColor.G, fillColor.B);
+
+            // set the border width depending on the map scale
+            var pen = new Pen(Brushes.Black, (int)(50.0 / pixelSize)) { LineJoin = System.Drawing.Drawing2D.LineJoin.Round };
+
+            return new VectorStyle { Outline = pen, EnableOutline = true, Fill = brush };
+        }
     }
 }

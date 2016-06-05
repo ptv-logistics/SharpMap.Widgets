@@ -171,6 +171,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DonutProvider.cs" />
     <Compile Include="LayerFactories.cs" />
     <Compile Include="SharpMapProvider.cs" />
     <Compile Include="Window1.xaml.cs">

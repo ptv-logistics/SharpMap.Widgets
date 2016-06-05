@@ -28,12 +28,12 @@ namespace SpatialTutorial
             // create a transparent sharpmap map with a size of 256x256
             using (var sharpMap = new SharpMap.Map(new Size(256, 256)) { BackColor = Color.Transparent })
             {
-                // add the layer to the map
-                foreach (var l in LayerFactories.BgFactory(sharpMap))
-                    sharpMap.Layers.Add(l);
-
                 // calculate the bbox for the tile key and zoom the map 
-                sharpMap.ZoomToBox(TileToWebMercatorAtZoom(x,y,z));
+                sharpMap.ZoomToBox(TileToWebMercatorAtZoom(x, y, z));
+
+                // add the layer to the map
+                foreach (var l in LayerFactories.BgFactory(sharpMap.PixelSize))
+                    sharpMap.Layers.Add(l);
 
                 // render the map image
                 using (var img = sharpMap.GetMap())

@@ -35,7 +35,7 @@
             zoomSnap: 0.125
         });
 
-        // center Karlsruhe
+        // center Europe
         map.setView(new L.LatLng(50, 10), 6);
 
         // using the xmap WMS servlet
@@ -45,51 +45,29 @@
         // add the xServer layers
         // set the layer groups for default and sandbox
         var baseLayers = {
-            "PTV classic": getLayers(xMapUrl + '/WMS/WMS', "", xMapAttribution),
-            "PTV sandbox": getLayers(xMapUrl + '/WMS/WMS', "sandbox", xMapAttribution).addTo(map),
-            "PTV silkysand": getLayers(xMapUrl + '/WMS/WMS', "silkysand", xMapAttribution)
+            "PTV classic": getXMap1Layers(xMapUrl + '/WMS/WMS', "", xMapAttribution),
+            "PTV sandbox": getXMap1Layers(xMapUrl + '/WMS/WMS', "sandbox", xMapAttribution).addTo(map),
+            "PTV silkysand": getXMap1Layers(xMapUrl + '/WMS/WMS', "silkysand", xMapAttribution)
         };
 
         // add dymamic tile layer
         var myTileLayerUrl = 'SharpMapTilesHandler.ashx?x={x}&y={y}&z={z}',
 	    myTileLayer = new L.TileLayer(myTileLayerUrl, {
 	        maxZoom: 20, minZoom: 0, zIndex: 100
-	    });
-        map.addLayer(myTileLayer);
+	    }).addTo(map);
 
-        // add dymamic tile layer
+        // add dymamic overlay layer
         var myOverlayLayer = new L.NonTiledLayer.WMS('SharpMapOverlayHandler.ashx', {
             zIndex: 1,
             opacity: 1.0,
             layers: '',
             format: 'image/png',
             transparent: true
-        });
-        map.addLayer(myOverlayLayer);
+        }).addTo(map);
 
-        L.control.layers(baseLayers, {"countries": myTileLayer, "POIs": myOverlayLayer}, { autoZIndex: false }).addTo(map);
-
-
-        // returns a layer group for xmap back- and foreground layers
-        function getLayers(url, style, attribution) {
-            var background = L.tileLayer('https://api{s}-test.cloud.ptvgroup.com/WMS/GetTile/' +
-                (style ? 'xmap-' + style + '-bg' : 'xmap-ajaxbg') + '/{x}/{y}/{z}.png', {
-                    minZoom: 0, maxZoom: 19, opacity: 1.0,
-                    attribution: attribution,
-                    subdomains: '1234'
-                });
-        
-            var foreground = new L.NonTiledLayer.WMS(url + '?xtok=' + token, {
-                zIndex: 0,
-                opacity: 1.0,
-                layers: style? 'xmap-' + style + '-fg' : 'xmap-ajaxfg',
-                format: 'image/png',
-                transparent: true,
-                attribution: attribution,
-            });
-
-            return L.layerGroup([background, foreground]);
-        }
+        // add controls
+        L.control.layers(baseLayers, {"Areas": myTileLayer, "POIs": myOverlayLayer}, { autoZIndex: false }).addTo(map);
+        L.control.scale().addTo(map);
 
         // set cursor always interactive
         $('.leaflet-container').css('cursor', 'pointer');
@@ -106,40 +84,66 @@
         });
 
         var pickedFeature;
-        var popup = L.popup();
 
-        function displayResult(pickedPolygon, latlng) {
+        function displayResult(pickedJson, latlng) {
+
+            // remove old selection
             if (pickedFeature)
                 map.removeLayer(pickedFeature);
 
-            if (!pickedPolygon || !pickedPolygon.geometry)
+            // return if result was empty
+            if (!pickedJson || !pickedJson.geometry)
                 return;
 
-            pickedFeature = L.geoJson([pickedPolygon], {
+            // create a new layer from the json
+            pickedFeature = L.geoJson([pickedJson], {
                 style: function (feature) {  
-                    var x = {
+                    return {
                         weight: 4, color: "#222", opacity: 1,
                         fillColor: "#fff", fillOpacity: 0.5
                     }
-                    return x;
                 }
             }).addTo(map);
 
+            // create a popup text from all attributes
             var popupText = '';
-            for(var key in pickedPolygon.properties) {
-                popupText = popupText.concat('<b>', key, ':</b> ', pickedPolygon.properties[key], '<br>');
+            for (var key in pickedJson.properties) {
+                popupText = popupText.concat('<b>', key, ':</b> ', pickedJson.properties[key], '<br>');
             }
 
-            if (pickedPolygon.geometry.type == 'Point') {
+            // for points append the popup on the pushpin, else create
+            // a new poup on the click-coordinate
+            if (pickedJson.geometry.type == 'Point') {
                 pickedFeature.bindPopup(popupText).openPopup();
             }
             else {
+                var popup = L.popup();
                 popup.setLatLng(latlng)
                     .setContent(popupText)
                     .openOn(map);
             }
         };
 
+        // returns a layer group for xmap back- and foreground layers
+        function getXMap1Layers(url, style, attribution) {
+            var background = L.tileLayer('https://api{s}-test.cloud.ptvgroup.com/WMS/GetTile/' +
+                (style ? 'xmap-' + style + '-bg' : 'xmap-ajaxbg') + '/{x}/{y}/{z}.png', {
+                    minZoom: 0, maxZoom: 19, opacity: 1.0,
+                    attribution: attribution,
+                    subdomains: '1234'
+                });
+
+            var foreground = new L.NonTiledLayer.WMS(url + '?xtok=' + token, {
+                zIndex: 0,
+                opacity: 1.0,
+                layers: style ? 'xmap-' + style + '-fg' : 'xmap-ajaxfg',
+                format: 'image/png',
+                transparent: true,
+                attribution: attribution,
+            });
+
+            return L.layerGroup([background, foreground]);
+        }
     </script>
 </body>
 </html>

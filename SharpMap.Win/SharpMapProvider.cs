@@ -50,12 +50,12 @@ namespace Ptv.XServer.Demo.ShapeFile
         #endregion
 
         /// <summary>The data source containing the shape files.</summary>
-        private readonly Func<SharpMap.Map, IEnumerable<SharpMap.Layers.ILayer>> sharpMapFactory;
+        private readonly Func<double, IEnumerable<SharpMap.Layers.ILayer>> sharpMapFactory;
 
         /// <summary> Initializes a new instance of the <see cref="SharpMapTiledProvider"/> class. The SharpMap tiled
         /// provider reads the shapes from the given shape file path. </summary>
         /// <param name="shapeFile"> The full qualified path to the shape file. </param>
-        public SharpMapProvider(Func<SharpMap.Map, IEnumerable<SharpMap.Layers.ILayer>> sharpMapFactory)
+        public SharpMapProvider(Func<double, IEnumerable<SharpMap.Layers.ILayer>> sharpMapFactory)
         {
             this.sharpMapFactory = sharpMapFactory; 
         }
@@ -89,12 +89,12 @@ namespace Ptv.XServer.Demo.ShapeFile
             // create a transparent sharpmap map with a size of 256x256
             using (var sharpMap = new SharpMap.Map(new Size(width, height)) { BackColor = Color.Transparent })
             {
-                // add the layer to the map
-                foreach (var l in sharpMapFactory(sharpMap))
-                    sharpMap.Layers.Add(l);
-
                 // calculate the bbox for the tile key and zoom the map 
                 sharpMap.ZoomToBox(envelope);
+
+                // add the layer to the map
+                foreach (var l in sharpMapFactory(sharpMap.PixelSize))
+                    sharpMap.Layers.Add(l);
 
                 // render the map image
                 using (var img = sharpMap.GetMap())

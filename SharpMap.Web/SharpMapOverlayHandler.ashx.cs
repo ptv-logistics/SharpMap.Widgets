@@ -32,7 +32,7 @@ namespace SpatialTutorial
             using (var sharpMap = new SharpMap.Map(new Size(width, height)) { BackColor = Color.Transparent })
             {
                 // add the layer to the map
-                foreach (var l in LayerFactories.FgFactory(sharpMap))
+                foreach (var l in LayerFactories.FgFactory(sharpMap.PixelSize))
                     sharpMap.Layers.Add(l);
 
                 // zoom to the requested envelope 

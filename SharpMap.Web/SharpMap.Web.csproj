@@ -176,6 +176,9 @@
     <Compile Include="..\SharpMap.Win\AddressMonitor\BitmapCache.cs">
       <Link>AddressMonitor\BitmapCache.cs</Link>
     </Compile>
+    <Compile Include="..\SharpMap.Win\DonutProvider.cs">
+      <Link>DonutProvider.cs</Link>
+    </Compile>
     <Compile Include="..\SharpMap.Win\LayerFactories.cs">
       <Link>LayerFactories.cs</Link>
     </Compile>
