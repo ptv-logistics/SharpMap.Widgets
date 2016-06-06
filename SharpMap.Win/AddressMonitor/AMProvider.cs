@@ -7,6 +7,7 @@ using SharpMap.Data.Providers;
 using SharpMap.Data;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
+using Tools;
 
 namespace Ptv.Controls.Map.AddressMonitor
 {
@@ -242,9 +243,9 @@ namespace Ptv.Controls.Map.AddressMonitor
 
         public Collection<IGeometry> GetGeometriesInView(Envelope bbox)
         {
-            bbox = Wgs2SphereMercator(bbox);
+            bbox = GeoTools.Wgs2SphereMercator(bbox);
             var result = new Collection<IGeometry>();
-            using (System.Data.OleDb.OleDbConnection conn = new OleDbConnection(_ConnectionString))
+            using (var conn = new OleDbConnection(_ConnectionString))
             {
                 string strSQL = "Select " + this.XColumn + ", " + this.YColumn + " FROM " + this.Table + " WHERE ";
                 if (!String.IsNullOrEmpty(_defintionQuery))
@@ -253,15 +254,15 @@ namespace Ptv.Controls.Map.AddressMonitor
                 strSQL += this.XColumn + " BETWEEN " + System.Convert.ToInt32(bbox.Left()).ToString() + " AND " + System.Convert.ToInt32(bbox.Right()).ToString() + " AND " +
                     this.YColumn + " BETWEEN " + System.Convert.ToInt32(bbox.Bottom()).ToString() + " AND " + System.Convert.ToInt32(bbox.Top()).ToString();
 
-                using (System.Data.OleDb.OleDbCommand command = new OleDbCommand(strSQL, conn))
+                using (var command = new OleDbCommand(strSQL, conn))
                 {
                     conn.Open();
-                    using (System.Data.OleDb.OleDbDataReader dr = command.ExecuteReader())
+                    using (var dr = command.ExecuteReader())
                     {
                         while (dr.Read())
                         {
                             if (dr[0] != DBNull.Value && dr[1] != DBNull.Value)
-                                result.Add(new Point(SphereMercator2Wgs(new Coordinate(System.Convert.ToDouble(dr[0]), System.Convert.ToDouble(dr[1])))));
+                                result.Add(new Point(GeoTools.SphereMercator2Wgs(new Coordinate(System.Convert.ToDouble(dr[0]), System.Convert.ToDouble(dr[1])))));
                         }
                     }
                     conn.Close();
@@ -273,7 +274,7 @@ namespace Ptv.Controls.Map.AddressMonitor
 
         public Collection<uint> GetObjectIDsInView(Envelope bbox)
         {
-            bbox = Wgs2SphereMercator(bbox);
+            bbox = GeoTools.Wgs2SphereMercator(bbox);
             Collection<uint> objectlist = new Collection<uint>();
             using (System.Data.OleDb.OleDbConnection conn = new OleDbConnection(_ConnectionString))
             {
@@ -304,16 +305,16 @@ namespace Ptv.Controls.Map.AddressMonitor
             using (System.Data.OleDb.OleDbConnection conn = new OleDbConnection(_ConnectionString))
             {
                 string strSQL = "Select " + this.XColumn + ", " + this.YColumn + " FROM " + this.Table + " WHERE " + this.ObjectIdColumn + "=" + oid.ToString();
-                using (System.Data.OleDb.OleDbCommand command = new OleDbCommand(strSQL, conn))
+                using (var command = new OleDbCommand(strSQL, conn))
                 {
                     conn.Open();
-                    using (System.Data.OleDb.OleDbDataReader dr = command.ExecuteReader())
+                    using (var dr = command.ExecuteReader())
                     {
                         if (dr.Read())
                         {
                             //If the read row is OK, create a point geometry from the XColumn and YColumn and return it
                             if (dr[0] != DBNull.Value && dr[1] != DBNull.Value)
-                                return new Point(SphereMercator2Wgs(new Coordinate(System.Convert.ToDouble(dr[0]), System.Convert.ToDouble(dr[1]))));
+                                return new Point(GeoTools.SphereMercator2Wgs(new Coordinate(Convert.ToDouble(dr[0]), System.Convert.ToDouble(dr[1]))));
                         }
                     }
                     conn.Close();
@@ -329,9 +330,9 @@ namespace Ptv.Controls.Map.AddressMonitor
 
         public void ExecuteIntersectionQuery(Envelope bbox, FeatureDataSet ds)
         {
-            bbox = Wgs2SphereMercator(bbox);
+            bbox = GeoTools.Wgs2SphereMercator(bbox);
 
-            using (System.Data.OleDb.OleDbConnection conn = new OleDbConnection(_ConnectionString))
+            using (var conn = new OleDbConnection(_ConnectionString))
             {
                 string strSQL = "Select * FROM " + this.Table + " WHERE ";
                 if (!String.IsNullOrEmpty(_defintionQuery)) //If a definition query has been specified, add this as a filter on the query
@@ -341,7 +342,7 @@ namespace Ptv.Controls.Map.AddressMonitor
                     " BETWEEN " + System.Convert.ToInt32(bbox.Bottom()).ToString() + " AND " + System.Convert.ToInt32(bbox.Top()).ToString() +
                     " ORDER BY " + this.YColumn + " DESC"; // makes them appear nicely ordered on a map
 
-                using (System.Data.OleDb.OleDbDataAdapter adapter = new OleDbDataAdapter(strSQL, conn))
+                using (var adapter = new OleDbDataAdapter(strSQL, conn))
                 {
                     conn.Open();
                     System.Data.DataSet ds2 = new System.Data.DataSet();
@@ -358,7 +359,7 @@ namespace Ptv.Controls.Map.AddressMonitor
                             foreach (System.Data.DataColumn col in ds2.Tables[0].Columns)
                                 fdr[col.ColumnName] = dr[col];
                             if (dr[this.XColumn] != DBNull.Value && dr[this.YColumn] != DBNull.Value)
-                                fdr.Geometry = new Point(SphereMercator2Wgs(new Coordinate(System.Convert.ToDouble(dr[this.XColumn]), System.Convert.ToDouble(dr[this.YColumn]))));
+                                fdr.Geometry = new Point(GeoTools.SphereMercator2Wgs(new Coordinate(System.Convert.ToDouble(dr[this.XColumn]), System.Convert.ToDouble(dr[this.YColumn]))));
                             fdt.AddRow(fdr);
                         }
                         ds.Tables.Add(fdt);
@@ -369,7 +370,7 @@ namespace Ptv.Controls.Map.AddressMonitor
 
         Envelope IProvider.GetExtents()
         {
-            using (System.Data.OleDb.OleDbConnection conn = new OleDbConnection(_ConnectionString))
+            using (var conn = new OleDbConnection(_ConnectionString))
             {
                 string strSQL = "Select Min(" + this.XColumn + ") as MinX, Max(" + this.XColumn + ") As MaxX, " +
                                        "Min(" + this.YColumn + ") As minY, Max(" + this.YColumn + ") As MaxY FROM " + this.Table;
@@ -379,13 +380,13 @@ namespace Ptv.Controls.Map.AddressMonitor
                 using (System.Data.OleDb.OleDbCommand command = new OleDbCommand(strSQL, conn))
                 {
                     conn.Open();
-                    using (System.Data.OleDb.OleDbDataReader dr = command.ExecuteReader())
+                    using (var dr = command.ExecuteReader())
                     {
                         if (dr.Read())
                         {
                             //If the read row is OK, create a point geometry from the XColumn and YColumn and return it
                             if (dr[0] != DBNull.Value && dr[1] != DBNull.Value && dr[2] != DBNull.Value && dr[3] != DBNull.Value)
-                                return SphereMercator2Wgs(new Envelope(System.Convert.ToDouble(dr[0]), System.Convert.ToDouble(dr[1]), System.Convert.ToDouble(dr[2]), System.Convert.ToDouble(dr[3])));
+                                return GeoTools.SphereMercator2Wgs(new Envelope(System.Convert.ToDouble(dr[0]), System.Convert.ToDouble(dr[1]), System.Convert.ToDouble(dr[2]), System.Convert.ToDouble(dr[3])));
                         }
                     }
                     conn.Close();
@@ -394,27 +395,5 @@ namespace Ptv.Controls.Map.AddressMonitor
             return null;
         }
         #endregion
-
-        public static Coordinate Wgs2SphereMercator(Coordinate point)
-        {
-            return new Coordinate(6371000.0 * point.X * Math.PI / 180.0,
-                6371000.0 * Math.Log(Math.Tan(Math.PI / 4.0 + point.Y * Math.PI / 360.0)));
-        }
-
-        public static Coordinate SphereMercator2Wgs(Coordinate point)
-        {
-            return new Coordinate((180.0 / Math.PI) * (point.X / 6371000.0),
-                (360 / Math.PI) * (Math.Atan(Math.Exp(point.Y / 6371000.0)) - (Math.PI / 4)));
-        }
-
-        public static Envelope Wgs2SphereMercator(Envelope envelope)
-        {
-            return new Envelope(Wgs2SphereMercator(envelope.TopLeft()), Wgs2SphereMercator(envelope.BottomRight()));
-        }
-
-        public static Envelope SphereMercator2Wgs(Envelope envelope)
-        {
-            return new Envelope(SphereMercator2Wgs(envelope.TopLeft()), SphereMercator2Wgs(envelope.BottomRight()));
-        }
     }
 }

@@ -2,20 +2,20 @@
 using NetTopologySuite.Geometries;
 using System;
 using System.Collections.Generic;
+using Tools;
 
-namespace Widgets
+namespace Providers
 {
     /// <summary>
-    /// The donut provider creates an in-memory set of computed shapes and stores them as OCG binaries
-    /// inside a quad-tree. This is just a template to use your own computed shapes.
+    /// The donut provider returns an in-memory set of computed shapes as OGC geometries
     /// </summary>
     public class DonutProvider
-    {   
-        // re-create ou shapes
-        public static IEnumerable<GeoAPI.Geometries.IGeometry> CreateShapes(int number)
+    {
+        // re-create our shapes
+        public static IEnumerable<IGeometry> CreateRandomDonuts(int number)
         {
-            // we just generate some random objects
-            var rand = new Random();
+            // some reproduceable random sequence
+            var rand = new Random(42);
 
             for (var dix = 0; dix < number; dix++)
             {
@@ -27,51 +27,59 @@ namespace Widgets
                 var radiusY = rand.NextDouble() * 20000.0 + 10000.0; // y-radius in m
                 var buffer = 10000.0; // buffer size in m
 
-                // the donut shapes are calulcated in a mercator (= conformal) projection
-                // This means we can assiciate units with meters and angles are correct
-                // see http://bl.ocks.org/oliverheilig/29e494c33ef58c6d5839
-                var mercP = Ptv.Controls.Map.AddressMonitor.AMProvider.Wgs2SphereMercator(new Coordinate(lon, lat));
-
-                // in our conformal projection we have to adopt the size depending on the latitude
-                var f = 1.0 / Math.Cos((lat / 360) * 2 * Math.PI);
-                radiusX *= f;
-                radiusY *= f;
-                buffer *= f;
-
-                // the step size for the approximation
-                var numVertices = 100;
-                var darc = 2 * Math.PI / numVertices;
-
-                // create shell
-                var shell = new List<Coordinate>();
-                for (var i = 0; i < numVertices; i++)
-                {
-                    var arc = darc * i;
-
-                    var xPos = mercP.X - (radiusX * Math.Sin(arc)) * Math.Sin(rot * Math.PI) + (radiusY * Math.Cos(arc)) * Math.Cos(rot * Math.PI);
-                    var yPos = mercP.Y + (radiusY * Math.Cos(arc)) * Math.Sin(rot * Math.PI) + (radiusX * Math.Sin(arc)) * Math.Cos(rot * Math.PI);
-
-                    shell.Add(Ptv.Controls.Map.AddressMonitor.AMProvider.SphereMercator2Wgs(new Coordinate(xPos, yPos)));
-                }
-                shell.Add(shell[0]); // close ring
-
-                // create hole
-                var hole = new List<Coordinate>();
-                for (var i = 0; i < numVertices; i++)
-                {
-                    var arc = darc * i;
-
-                    var xPos = mercP.X - ((radiusX - buffer) * Math.Sin(arc)) * Math.Sin(rot * Math.PI) + ((radiusY - buffer) * Math.Cos(arc)) * Math.Cos(rot * Math.PI);
-                    var yPos = mercP.Y + ((radiusY - buffer) * Math.Cos(arc)) * Math.Sin(rot * Math.PI) + ((radiusX - buffer) * Math.Sin(arc)) * Math.Cos(rot * Math.PI);
-
-                    hole.Add(Ptv.Controls.Map.AddressMonitor.AMProvider.SphereMercator2Wgs(new Coordinate(xPos, yPos)));
-                }
-                hole.Add(hole[0]); // close ring
-
-                yield return Geometry.DefaultFactory.CreatePolygon(
-                    Geometry.DefaultFactory.CreateLinearRing(shell.ToArray()),
-                    new ILinearRing[] { Geometry.DefaultFactory.CreateLinearRing(hole.ToArray()) });
+                yield return CreateDonut(lat, lon, rot, radiusX, radiusY, buffer);
             }
+        }
+
+        // create a donut with the donut parameters
+        public static IPolygon CreateDonut(
+            double lat, double lon, double rot, double radiusX, double radiusY, double buffer)
+        {
+            // the donut shapes are calculated in a mercator (= conformal) projection
+            // This means we can associate units with meters and angles are correct
+            // see http://bl.ocks.org/oliverheilig/29e494c33ef58c6d5839
+            var mercP = GeoTools.Wgs2SphereMercator(new Coordinate(lon, lat));
+
+            // in our conformal projection we have to adopt the size depending on the latitude
+            var f = 1.0 / Math.Cos((lat / 360) * 2 * Math.PI);
+            radiusX *= f;
+            radiusY *= f;
+            buffer *= f;
+
+            // the step size for the approximation
+            var numVertices = 100;
+            var darc = 2 * Math.PI / numVertices;
+
+            // create shell
+            var shell = new List<Coordinate>();
+            for (var i = 0; i < numVertices; i++)
+            {
+                var arc = darc * i;
+
+                var xPos = mercP.X - (radiusX * Math.Sin(arc)) * Math.Sin(rot * Math.PI) + (radiusY * Math.Cos(arc)) * Math.Cos(rot * Math.PI);
+                var yPos = mercP.Y + (radiusY * Math.Cos(arc)) * Math.Sin(rot * Math.PI) + (radiusX * Math.Sin(arc)) * Math.Cos(rot * Math.PI);
+
+                // the computed coordinates are transformed back to WGS
+                shell.Add(GeoTools.SphereMercator2Wgs(new Coordinate(xPos, yPos)));
+            }
+            shell.Add(shell[0]); // close ring
+
+            // create hole
+            var hole = new List<Coordinate>();
+            for (var i = 0; i < numVertices; i++)
+            {
+                var arc = darc * i;
+
+                var xPos = mercP.X - ((radiusX - buffer) * Math.Sin(arc)) * Math.Sin(rot * Math.PI) + ((radiusY - buffer) * Math.Cos(arc)) * Math.Cos(rot * Math.PI);
+                var yPos = mercP.Y + ((radiusY - buffer) * Math.Cos(arc)) * Math.Sin(rot * Math.PI) + ((radiusX - buffer) * Math.Sin(arc)) * Math.Cos(rot * Math.PI);
+
+                hole.Add(GeoTools.SphereMercator2Wgs(new Coordinate(xPos, yPos)));
+            }
+            hole.Add(hole[0]); // close ring
+
+            return Geometry.DefaultFactory.CreatePolygon(
+                Geometry.DefaultFactory.CreateLinearRing(shell.ToArray()),
+                new ILinearRing[] { Geometry.DefaultFactory.CreateLinearRing(hole.ToArray()) });
         }
     }
 }

@@ -9,6 +9,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Web;
+using Tools;
 using Widgets;
 
 namespace SpatialTutorial
@@ -43,11 +44,11 @@ namespace SpatialTutorial
 
                 // now calculate a mercator envelope of the corresponsing size
                 var mSize = mercPerPix * size2;
-                var mp = Ptv.Controls.Map.AddressMonitor.AMProvider.Wgs2SphereMercator(new Coordinate(lng, lat));
+                var mp = GeoTools.Wgs2SphereMercator(new Coordinate(lng, lat));
                 var envelope = new Envelope(mp.X - mSize, mp.X + mSize, mp.Y - mSize, mp.Y + mSize);
 
                 // and transform it to wgs
-                var wgsEnvelope = Ptv.Controls.Map.AddressMonitor.AMProvider.SphereMercator2Wgs(envelope);
+                var wgsEnvelope = GeoTools.SphereMercator2Wgs(envelope);
 
                 // get all fg (= point) vector layers
                 var fgTopDown = (from l in LayerFactories.FgFactory() where l is VectorLayer select l as VectorLayer).Reverse();

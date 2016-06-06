@@ -72,24 +72,42 @@
         // set cursor always interactive
         $('.leaflet-container').css('cursor', 'pointer');
 
+        var tick = 0;
+
         // add click handler
         map.on('click', function onMapClick(e) {
             $.ajax({
                 url: "SharpMapPickHandler.ashx?lat=" + e.latlng.lat + "&lng=" + e.latlng.lng + "&z=" + map.getZoom(),
                 type: "GET",
                 success: function (data, status, xhr) {
-                    displayResult(data, e.latlng);
+                    displayResult(data, e.latlng, ++tick);
                 }
             });
         });
 
         var pickedFeature;
 
-        function displayResult(pickedJson, latlng) {
+        map.on('popupclose', function (e) {
+            // remove old selection (deferred)
+            if (pickedFeature) {
+                setTimeout(function () {
+                    map.removeLayer(pickedFeature);
+                    pickedFeature = null;
+                }, 0);
+            }
+        });
+
+        function displayResult(pickedJson, latlng, t) {
+
+            // obsolete result
+            if (t != tick)
+                return;
 
             // remove old selection
-            if (pickedFeature)
+            if (pickedFeature) {
                 map.removeLayer(pickedFeature);
+                pickedFeature = null;
+            }
 
             // return if result was empty
             if (!pickedJson || !pickedJson.geometry)

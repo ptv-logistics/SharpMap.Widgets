@@ -20,7 +20,7 @@ namespace Widgets
         static LayerFactories()
         {
             // we createa a dummy data source that contains computed in-memory shapes
-            var donuts = DonutProvider.CreateShapes(100);
+            var donuts = Providers.DonutProvider.CreateRandomDonuts(100);
 
             var fdt = new FeatureDataTable();
             int id = 0;
