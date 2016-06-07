@@ -19,7 +19,7 @@ So it combines the power of SharpMap with the Look&Feel of modern widgets.
 
 ### The basic technique
 
-The basic idea is to compose (or "mesh-up") imagery (both tiled and non-tiled) and vector data on the client-side. "First-class" map widgets like Leaflet and OpenLayers (for browser applications) or PTV xServer.NET (for Microsoft Windows applications) support this. The partition is done both betwwen "base-map" and "application-data", wich is delivered from different services, as well as between different rendering-techniques, depending on the type of data and required responsiveness. So the layering-stack when using PTV xMapServer as base-map looks as follows:
+The basic idea is to compose (or "mesh-up") imagery and vector data on the client-side. "First-class" map widgets like Leaflet and OpenLayers (for browser applications) or PTV xServer.NET (for Microsoft Windows applications) support this. The partition is done both between "base-map" and "application-data", wich is delivered from different services, as well as between different rendering-techniques, depending on the type of data and required responsiveness. So the layering-stack when using PTV xMapServer as base-map looks as follows:
 
 ![Client-Composition](/Doc/ClientComposition.png)
 
