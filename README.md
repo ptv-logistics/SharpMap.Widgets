@@ -13,7 +13,7 @@ So it combines the power of SharpMap with the Look&Feel of modern widgets.
 ![Windows-Sample](/Doc/SharpMap.Win.png)
 
 ### What the project shows
-* Efficiently render large data sets with SharpMap for "slippy" map widgets
+* Efficiently render large data sets on "slippy" map widgets with SharpMap
 + Implementing SharpMap interfaces to render your custom data source
 + Sharing your map business-code between web and desktop applications
 
