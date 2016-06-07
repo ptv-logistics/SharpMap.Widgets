@@ -3,6 +3,7 @@ Build responsive map applications for web and desktop
 
 [Web-Sample](http://80.146.239.139/SharpMap.Widgets/)
 
+Widnwos-Sample
 ![Windows-Sample](/Doc/SharpMap.Win.png)
 
 [SharpMap](https://sharpmap.codeplex.com/) is a powerful mapping library that supports many standards and formats.
@@ -15,6 +16,10 @@ So it combines the power of SharpMap with the Look&Feel of modern widgets.
 * Efficiently render large data sets with SharpMap for "slippy" map widgets
 + Implementing SharpMap interfaces to render your custom data source
 + Sharing your map business-code between web and desktop applications
+
+### The basic technique
+
+![Client-Composition](/Doc/ClientComposition.png)
 
 ### ToDos
 * Add interaction (picking) for Win-Demo
