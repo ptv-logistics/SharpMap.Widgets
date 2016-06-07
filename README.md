@@ -9,7 +9,7 @@ So it combines the power of SharpMap with the Look&Feel of modern widgets.
 
 [Web-Sample](http://80.146.239.139/SharpMap.Widgets/)
 
-*Windows-Sample:*
+**Windows-Sample:**
 ![Windows-Sample](/Doc/SharpMap.Win.png)
 
 ### What the project shows
