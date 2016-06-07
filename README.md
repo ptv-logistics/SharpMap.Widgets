@@ -3,7 +3,7 @@ Build responsive map applications for web and desktop
 
 [Web-Sample](http://80.146.239.139/SharpMap.Widgets/)
 
-Widnwos-Sample
+Windwos-Sample
 ![Windows-Sample](/Doc/SharpMap.Win.png)
 
 [SharpMap](https://sharpmap.codeplex.com/) is a powerful mapping library that supports many standards and formats.
