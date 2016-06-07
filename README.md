@@ -1,8 +1,8 @@
 # SharpMap.Widgets
 Build responsive map applications for web and desktop
 
-[SharpMap](https://sharpmap.codeplex.com/) is a powerful mapping library that supports many standards and formats.
-But the interactive Web- and Windows-Widgets of the SharpMap project are not up to date.
+[SharpMap](https://sharpmap.codeplex.com/) is a powerful mapping library that supports a large variety of standards and formats.
+But the interactive Web- and Windows-Widgets of the SharpMap project are somehow neglected.
 SharpMap.Widgets shows how to combine the SharpMap renderer with map widgets 
 like [Leaflet](http://leafletjs.com/) or [Ptv xServer.NET](http://xserver.ptvgroup.com/en-uk/cookbook/explore/xserver-net-demo-center/).
 So it combines the power of SharpMap with the Look&Feel of modern widgets.
