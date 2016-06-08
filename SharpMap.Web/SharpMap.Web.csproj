@@ -130,9 +130,6 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\SharpMap.Win\AddressMonitor\DefaultPOIIcon.bmp">
-      <Link>AddressMonitor\DefaultPOIIcon.bmp</Link>
-    </Content>
     <Content Include="Data\Poi\Bitmaps\einkauf.bmp" />
     <Content Include="Data\Poi\Bitmaps\WORK.bmp" />
     <Content Include="Data\Poi\p_fd7.bmp" />
@@ -161,30 +158,6 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\SharpMap.Win\AddressMonitor\AMLayerFactory.cs">
-      <Link>AddressMonitor\AMLayerFactory.cs</Link>
-    </Compile>
-    <Compile Include="..\SharpMap.Win\AddressMonitor\AMLocator.cs">
-      <Link>AddressMonitor\AMLocator.cs</Link>
-    </Compile>
-    <Compile Include="..\SharpMap.Win\AddressMonitor\AMProvider.cs">
-      <Link>AddressMonitor\AMProvider.cs</Link>
-    </Compile>
-    <Compile Include="..\SharpMap.Win\AddressMonitor\AMStyle.cs">
-      <Link>AddressMonitor\AMStyle.cs</Link>
-    </Compile>
-    <Compile Include="..\SharpMap.Win\AddressMonitor\BitmapCache.cs">
-      <Link>AddressMonitor\BitmapCache.cs</Link>
-    </Compile>
-    <Compile Include="..\SharpMap.Win\DonutProvider.cs">
-      <Link>DonutProvider.cs</Link>
-    </Compile>
-    <Compile Include="..\SharpMap.Win\GeoTools.cs">
-      <Link>GeoTools.cs</Link>
-    </Compile>
-    <Compile Include="..\SharpMap.Win\LayerFactories.cs">
-      <Link>LayerFactories.cs</Link>
-    </Compile>
     <Compile Include="SharpMapPickHandler.ashx.cs">
       <DependentUpon>SharpMapPickHandler.ashx</DependentUpon>
     </Compile>
@@ -196,7 +169,12 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\SharpMap.Common\SharpMap.Common.csproj">
+      <Project>{17ba9a7c-f88b-4aa4-8304-92c8a4048ad4}</Project>
+      <Name>SharpMap.Common</Name>
+    </ProjectReference>
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

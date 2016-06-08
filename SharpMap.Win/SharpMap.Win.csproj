@@ -162,18 +162,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="AddressMonitor\AMLayerFactory.cs" />
-    <Compile Include="AddressMonitor\AMLocator.cs" />
-    <Compile Include="AddressMonitor\AMProvider.cs" />
-    <Compile Include="AddressMonitor\AMStyle.cs" />
-    <Compile Include="AddressMonitor\BitmapCache.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DonutProvider.cs" />
-    <Compile Include="GeoTools.cs" />
-    <Compile Include="LayerFactories.cs" />
     <Compile Include="SharpMapProvider.cs" />
     <Compile Include="Window1.xaml.cs">
       <DependentUpon>Window1.xaml</DependentUpon>
@@ -194,7 +186,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Resource Include="AddressMonitor\DefaultPOIIcon.bmp" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -253,7 +244,12 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\SharpMap.Common\SharpMap.Common.csproj">
+      <Project>{17ba9a7c-f88b-4aa4-8304-92c8a4048ad4}</Project>
+      <Name>SharpMap.Common</Name>
+    </ProjectReference>
+  </ItemGroup>
   <ItemGroup>
     <Content Include="..\SharpMap.Web\Data\Poi\p_fd7.bmp">
       <Link>Data\Poi\p_fd7.bmp</Link>
