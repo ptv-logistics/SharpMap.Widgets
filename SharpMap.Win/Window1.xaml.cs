@@ -1,6 +1,10 @@
-﻿using Ptv.XServer.Controls.Map.Layers.Tiled;
+﻿using Ptv.XServer.Controls.Map.Canvases;
+using Ptv.XServer.Controls.Map.Layers;
+using Ptv.XServer.Controls.Map.Layers.Tiled;
 using Ptv.XServer.Controls.Map.Layers.Untiled;
 using Ptv.XServer.Demo.ShapeFile;
+using SharpMap.Data;
+using System.Collections.ObjectModel;
 using System.Windows;
 
 namespace Widgets
@@ -27,6 +31,9 @@ namespace Widgets
             this.Map.Loaded += Map_Loaded;
         }
 
+        // the collection of selected elements
+        ObservableCollection<FeatureDataRow> selectedRegions = new ObservableCollection<FeatureDataRow>();
+
         void Map_Loaded(object sender, RoutedEventArgs e)
         {
             InitializeCustomLayer();
@@ -47,6 +54,18 @@ namespace Widgets
             };
 
             this.Map.Layers.Add(fgLayer);
+
+            // insert layer with two canvases
+            var layer = new BaseLayer("Selection")
+            {
+                CanvasCategories = new[] { CanvasCategory.SelectedObjects },
+                CanvasFactories = new BaseLayer.CanvasFactoryDelegate[]
+                {
+                    m => new SelectionCanvas(m, selectedRegions)
+                },
+            };
+
+            this.Map.Layers.Add(layer);
         }
     }
 }

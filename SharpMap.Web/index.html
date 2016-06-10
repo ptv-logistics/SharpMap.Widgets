@@ -41,14 +41,15 @@
 
         // using the xmap WMS servlet
         var xMapUrl = 'https://api-eu-test.cloud.ptvgroup.com';
-        var xMapAttribution = '<a href="http://www.ptvgroup.com">PTV<\/a>, HERE';
+        var xMapAttribution = '<a href="http://www.ptvgroup.com">PTV<\/a>, TOMTOM';
 
         // add the xServer layers
         // set the layer groups for default and sandbox
         var baseLayers = {
             "PTV classic": getXMap1Layers(xMapUrl + '/WMS/WMS', "", xMapAttribution),
-            "PTV sandbox": getXMap1Layers(xMapUrl + '/WMS/WMS', "sandbox", xMapAttribution).addTo(map),
-            "PTV silkysand": getXMap1Layers(xMapUrl + '/WMS/WMS', "silkysand", xMapAttribution)
+            "PTV sandbox": getXMap1Layers(xMapUrl + '/WMS/WMS', "sandbox", xMapAttribution),
+            "PTV silkysand": getXMap1Layers(xMapUrl + '/WMS/WMS', "silkysand", xMapAttribution),
+            "PTV silkysand": getXMap1Layers(xMapUrl + '/WMS/WMS', "gravelpit", xMapAttribution).addTo(map)
         };
 
         // add dymamic tile layer
@@ -73,6 +74,7 @@
         // set cursor always interactive
         $('.leaflet-container').css('cursor', 'pointer');
 
+        // needed to identify the latest reuqest
         var tick = 0;
 
         // add click handler
