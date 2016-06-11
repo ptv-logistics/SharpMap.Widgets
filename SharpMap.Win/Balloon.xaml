@@ -1,0 +1,32 @@
+﻿<UserControl x:Class="ToursAndStops.Balloon"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="100" d:DesignWidth="100">
+    <Grid Width="100" Height="100">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="113*" />
+                <ColumnDefinition Width="71*" />
+                <ColumnDefinition Width="116*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="10*" />
+                <RowDefinition Height="30*" />
+                <RowDefinition Height="40*" />
+            </Grid.RowDefinitions>     
+            <Path Canvas.ZIndex="1"  x:Name="ballonPath" Grid.ColumnSpan="3" Grid.RowSpan="3" VerticalAlignment="Bottom" Stretch="Uniform" Fill="Black" 
+              Data="F1 M 0,5.99997C 0,4.34 0.533722,2.92496 1.60123,1.75497C 2.66873,0.584991 4.06375,-3.05176e-005 5.78625,-3.05176e-005C 7.50873,-3.05176e-005 8.97501,0.584991 10.185,1.75497C 11.395,2.92496 12,4.34 12,5.99997C 12,9.29501 10.1925,13.35 6.57751,18.165L 5.77496,19.215C 5.625,19.03 5.41873,18.75 5.15625,18.375C 4.89374,18 4.43121,17.285 3.76874,16.23C 3.10623,15.175 2.52249,14.135 2.01749,13.11C 1.51248,12.085 1.04999,10.9087 0.630005,9.58121C 0.209991,8.25375 0,7.05997 0,5.99997 Z M 2.39996,6.13498C 2.39996,7.02499 2.73123,7.78622 3.39374,8.41873C 4.05621,9.05124 4.85248,9.36746 5.7825,9.36746C 6.71246,9.36746 7.50125,9.05496 8.14874,8.42996C 8.79626,7.80496 9.12,7.04373 9.12,6.14621C 9.12,5.24875 8.79626,4.48001 8.14874,3.84C 7.50125,3.19998 6.70999,2.87997 5.77496,2.87997C 4.81998,2.87997 4.01874,3.19247 3.37125,3.81747C 2.72375,4.44247 2.39996,5.215 2.39996,6.13498 Z "/>
+            <TextBox x:Name="textBox" FontWeight="Bold" TextAlignment="Center" Foreground="Black" Grid.Column="1" Grid.Row="1" Background="White"></TextBox>
+        </Grid>
+    </Grid>
+</UserControl>

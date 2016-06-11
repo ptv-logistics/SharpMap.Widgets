@@ -5,18 +5,19 @@
 // should have been provided with this distribution.
 //--------------------------------------------------------------
 
-using System.Collections.ObjectModel;
-using System.Windows.Input;
-using System.Collections.Specialized;
-using SharpMap.Data.Providers;
-using SharpMap.Data;
-using Ptv.XServer.Controls.Map;
-using Ptv.XServer.Controls.Map.Tools;
-using Ptv.XServer.Controls.Map.Canvases;
 using GeoAPI.Geometries;
+using Ptv.XServer.Controls.Map;
+using Ptv.XServer.Controls.Map.Canvases;
+using Ptv.XServer.Controls.Map.Tools;
 using SharpMap.Common;
-using System.Windows;
+using SharpMap.Data;
 using System;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.Windows;
+using System.Windows.Input;
+using System.Windows.Media;
+using ToursAndStops;
 
 namespace Widgets
 {
@@ -41,6 +42,7 @@ namespace Widgets
         {
             this.geometries = geometries;
             geometries.CollectionChanged += geometries_CollectionChanged;
+            renderTransform = new ScaleTransform(MapView.CurrentScale, MapView.CurrentScale);
 
             if (MapView.Name == "Map") // only select on main map
             {
@@ -115,11 +117,13 @@ namespace Widgets
 
             var row = HitTester.HitTest(wgsPoint.Y, wgsPoint.X, this.MapView.CurrentZoom);
 
-            if(row != null)
+            if (row != null)
                 geometries.Add(row);
         }
         #endregion //doc:map_MouseDown handler
         #endregion
+
+        private ScaleTransform renderTransform;
 
         #region update methods
         /// <summary> Updates the selected objects set. </summary>
@@ -131,16 +135,34 @@ namespace Widgets
             foreach (var fdr in geometries)
             {
                 if (fdr.Geometry is IPoint)
-                    continue;
+                {
+                    var point = (IPoint)fdr.Geometry;
+                    var cp = GeoToCanvas(new Point(point.X, point.Y));
 
-                var geometry = WkbToWpf.Parse(fdr.Geometry.AsBinary(), GeoToCanvas);
+                    var balloon = new Balloon();
+                    balloon.Color = System.Windows.Media.Colors.Blue;
+                    Children.Add(balloon);
+                    balloon.UpdateLayout();
 
-                Children.Add(new System.Windows.Shapes.Path {
-                    Fill = new System.Windows.Media.SolidColorBrush(new System.Windows.Media.Color { A = 192, R = 255, G = 255, B = 255 }),
-                    Stroke = System.Windows.Media.Brushes.Black,
-                    StrokeLineJoin = System.Windows.Media.PenLineJoin.Round,
-                    StrokeThickness = 4 * MapView.FinalScale
-                , Data = geometry });
+                    SetLeft(balloon, cp.X - balloon.ActualWidth / 2);
+                    SetTop(balloon, cp.Y - balloon.ActualHeight / 2);
+
+                    balloon.RenderTransform = renderTransform;
+                    balloon.RenderTransformOrigin = new Point(.5, .5);
+                }
+                else
+                {
+                    var geometry = WkbToWpf.Parse(fdr.Geometry.AsBinary(), GeoToCanvas);
+
+                    Children.Add(new System.Windows.Shapes.Path
+                    {
+                        Fill = new System.Windows.Media.SolidColorBrush(new System.Windows.Media.Color { A = 192, R = 255, G = 255, B = 255 }),
+                        Stroke = System.Windows.Media.Brushes.Black,
+                        StrokeLineJoin = System.Windows.Media.PenLineJoin.Round,
+                        StrokeThickness = 4 * MapView.FinalScale,
+                        Data = geometry
+                    });
+                }
             }
         }
         #endregion //doc:UpdateSelection method
@@ -150,6 +172,8 @@ namespace Widgets
         {
             if (updateMode == UpdateMode.Refresh || updateMode == UpdateMode.EndTransition)
                 UpdateSelection();
+
+            renderTransform.ScaleX = renderTransform.ScaleY = MapView.CurrentScale;
         }
         #endregion
     }

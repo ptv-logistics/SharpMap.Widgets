@@ -73,12 +73,11 @@ namespace Ptv.XServer.Demo.ShapeFile
         /// <inheritdoc/>
         public Stream GetImageStream(double left, double top, double right, double bottom, int width, int height)
         {
-            var envelope = new Envelope(left, right, top, bottom);
+            var ptvToGoogle = 6378137.0 / 6371000.0;
+            var envelope = new Envelope(left * ptvToGoogle, right * ptvToGoogle, top * ptvToGoogle, bottom * ptvToGoogle);
 
             // The bounds for GetImageStream are PTV-Mercator, but for convenience and consistency 
             // we use SharpMap with Web- (aka Google-) Mercator. So just transform the envelope.
-            var ptvToGoogle = 6378137.0 / 6371000.0;
-            envelope.ExpandBy(ptvToGoogle, ptvToGoogle);
 
             // now render the imate
             return GetImageStream(envelope, width, height);
