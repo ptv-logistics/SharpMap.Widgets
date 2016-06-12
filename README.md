@@ -19,7 +19,7 @@ But the interactive Web- and Windows-Widgets of the SharpMap project are somehow
 
 The basic idea is to compose (or "mesh-up") imagery and vector data on the client-side. "First-class" map widgets like Leaflet and OpenLayers (for browser applications) or PTV xServer.NET (for Microsoft Windows applications) support this. The partitioning is done both between "base-map" and "application-data", wich is delivered from different services, as well as between different rendering-techniques, depending on the type of data and required responsiveness. There are tree main categroies of render-data:
 
-* Persistent data than can be rendered viewpoort-indendently. This is typically the case for polygons and lines (areas or road segments).
+* Persistent data than can be rendered indendent from the viewport. This is typically the case for polygons and lines (areas or road segments).
 * Persistent data that cannot be rendered in tiles. This is the case for objects that "bleed" outside tiles or are using a heuristic layout algorithm. Symbols and labels need this strategy.
 * Transient data, for example the currently selected item.
 
