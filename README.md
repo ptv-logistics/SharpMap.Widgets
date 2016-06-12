@@ -2,9 +2,7 @@
 Build responsive map applications for web and desktop
 
 [SharpMap](https://sharpmap.codeplex.com/) is a powerful mapping library that supports a large variety of standards and formats.
-But the interactive Web- and Windows-Widgets of the SharpMap project are somehow neglected.
-SharpMap.Widgets shows how to combine the SharpMap renderer with map widgets 
-like [Leaflet](http://leafletjs.com/) or [Ptv xServer.NET](http://xserver.ptvgroup.com/en-uk/cookbook/explore/xserver-net-demo-center/).
+But the interactive Web- and Windows-Widgets of the SharpMap project are somehow neglected. On the other hand, "slippy map" Widgets like [Leaflet](http://leafletjs.com/) or [Ptv xServer.NET](http://xserver.ptvgroup.com/en-uk/cookbook/explore/xserver-net-demo-center/) cannot handle mass data very well. SharpMap.Widgets shows how to combine the SharpMap renderer with these widgets 
 So it combines the power of SharpMap with the Look&Feel of modern widgets.
 
 [Web-Sample](http://80.146.239.139/SharpMap.Widgets/)
@@ -20,7 +18,13 @@ So it combines the power of SharpMap with the Look&Feel of modern widgets.
 
 ### The basic technique
 
-The basic idea is to compose (or "mesh-up") imagery and vector data on the client-side. "First-class" map widgets like Leaflet and OpenLayers (for browser applications) or PTV xServer.NET (for Microsoft Windows applications) support this. The partitioning is done both between "base-map" and "application-data", wich is delivered from different services, as well as between different rendering-techniques, depending on the type of data and required responsiveness. So the layering-stack when using PTV xMapServer as base-map looks as follows:
+The basic idea is to compose (or "mesh-up") imagery and vector data on the client-side. "First-class" map widgets like Leaflet and OpenLayers (for browser applications) or PTV xServer.NET (for Microsoft Windows applications) support this. The partitioning is done both between "base-map" and "application-data", wich is delivered from different services, as well as between different rendering-techniques, depending on the type of data and required responsiveness. There are tree main categroies of render-data:
+
+* Persistent data than can be rendered viewpoort-indendently. This is typically the case for polygons and lines (areas or road segments).
+* Persistent data that cannot be rendered in tiles. This is the case for objects that "bleed" outside tiles or are using a heuristic layout algorithm. Symbols and labels need this strategy.
+* Transient data, for example the currently selected item.
+
+So the layering-stack when using PTV xMapServer as base-map looks as follows:
 
 ![Client-Composition](/Doc/ClientComposition.png)
 
