@@ -14,8 +14,9 @@ So it combines the power of SharpMap with the Look&Feel of modern widgets.
 
 ### What the project shows
 * Efficiently render large data sets on "slippy" map widgets with SharpMap
-+ Implementing SharpMap interfaces to render your custom data source
-+ Sharing your map business-code between web and desktop applications
+* Add interaction to pick an item
+* Implementing SharpMap interfaces to render your custom data source
+* Sharing your map business-code between web and desktop applications
 
 ### The basic technique
 
@@ -24,7 +25,6 @@ The basic idea is to compose (or "mesh-up") imagery and vector data on the clien
 ![Client-Composition](/Doc/ClientComposition.png)
 
 ### ToDos
-* Add interaction (picking) for Win-Demo
 * Enabling/disabling SharpMap layers
 * Some dynamic filtering and styling
 * Better sample data sources
