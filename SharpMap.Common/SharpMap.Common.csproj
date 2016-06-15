@@ -114,6 +114,7 @@
     <Compile Include="GeoTools.cs" />
     <Compile Include="HitTester.cs" />
     <Compile Include="LayerFactories.cs" />
+    <Compile Include="LayerInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

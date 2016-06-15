@@ -1,4 +1,5 @@
 ﻿using GeoAPI.Geometries;
+using SharpMap.Common;
 using System;
 using System.Drawing;
 using System.Drawing.Imaging;
@@ -32,7 +33,7 @@ namespace SpatialTutorial
             using (var sharpMap = new SharpMap.Map(new Size(width, height)) { BackColor = Color.Transparent })
             {
                 // add the layer to the map
-                foreach (var l in LayerFactories.FgFactory(sharpMap.PixelSize))
+                foreach (var l in SampleLayers.Layers.GetLayers(RenderingLayer.Foreground, sharpMap.PixelSize))
                     sharpMap.Layers.Add(l);
 
                 // zoom to the requested envelope 

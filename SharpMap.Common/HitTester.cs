@@ -3,6 +3,7 @@ using NetTopologySuite.Geometries;
 using SharpMap.Data;
 using SharpMap.Layers;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Tools;
 using Widgets;
@@ -11,7 +12,7 @@ namespace SharpMap.Common
 {
     public class HitTester
     {
-        public static FeatureDataRow HitTest(double lat, double lon, double z)
+        public static FeatureDataRow HitTest(IEnumerable<LayerInfo> layers, double lat, double lon, double z)
         {
             // we assume the half size for symbols is 8 pixel
             var size2 = 8;
@@ -30,7 +31,7 @@ namespace SharpMap.Common
             var wgsEnvelope = GeoTools.SphereMercator2Wgs(envelope);
 
             // get all fg (= point) vector layers
-            var fgTopDown = (from l in LayerFactories.FgFactory() where l is VectorLayer select l as VectorLayer).Reverse();
+            var fgTopDown = (from l in layers.GetLayers(RenderingLayer.Foreground) where l is VectorLayer select l as VectorLayer).Reverse();
 
             FeatureDataRow row = null;
             foreach (var l in fgTopDown)
@@ -46,7 +47,7 @@ namespace SharpMap.Common
             }
 
             // get all bg (= area) vector layers
-            var bgTopDown = (from l in LayerFactories.BgFactory() where l is VectorLayer select l as VectorLayer).Reverse();
+            var bgTopDown = (from l in layers.GetLayers(RenderingLayer.Background) where l is VectorLayer select l as VectorLayer).Reverse();
 
             foreach (var l in bgTopDown)
             {
@@ -92,6 +93,11 @@ namespace SharpMap.Common
             // nothing was hit
             return null;
 
+        }
+
+        public static object HitTest(object sampleInfo, double y, double x, double currentZoom)
+        {
+            throw new NotImplementedException();
         }
     }
 }

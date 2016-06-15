@@ -1,4 +1,5 @@
 ﻿using GeoAPI.Geometries;
+using SharpMap.Common;
 using System;
 using System.Drawing;
 using System.Drawing.Imaging;
@@ -32,7 +33,7 @@ namespace SpatialTutorial
                 sharpMap.ZoomToBox(TileToWebMercatorAtZoom(x, y, z));
 
                 // add the layer to the map
-                foreach (var l in LayerFactories.BgFactory(sharpMap.PixelSize))
+                foreach (var l in SampleLayers.Layers.GetLayers(RenderingLayer.Background, sharpMap.PixelSize))
                     sharpMap.Layers.Add(l);
 
                 // render the map image

@@ -115,7 +115,7 @@ namespace Widgets
             var canvasPoint = e.GetPosition(this);
             System.Windows.Point wgsPoint = CanvasToGeo(canvasPoint);
 
-            var row = HitTester.HitTest(wgsPoint.Y, wgsPoint.X, this.MapView.CurrentZoom);
+            var row = HitTester.HitTest(SampleLayers.Layers, wgsPoint.Y, wgsPoint.X, this.MapView.CurrentZoom);
 
             if (row != null)
                 geometries.Add(row);

@@ -35,7 +35,7 @@ namespace SpatialTutorial
 
                 context.Response.ContentType = "text/json";
 
-                var hitObject = HitTester.HitTest(lat, lng, z); 
+                var hitObject = HitTester.HitTest(SampleLayers.Layers, lat, lng, z); 
                 if(hitObject!=null)
                     WriteRow(hitObject, context.Response);
                 else

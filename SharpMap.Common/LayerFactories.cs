@@ -1,6 +1,7 @@
 ﻿using ProjNet.CoordinateSystems;
 using ProjNet.CoordinateSystems.Transformations;
 using Ptv.Controls.Map.AddressMonitor;
+using SharpMap.Common;
 using SharpMap.Data;
 using SharpMap.Layers;
 using SharpMap.Rendering.Thematics;
@@ -11,20 +12,23 @@ using System.Data;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 
 namespace Widgets
 {
-    public static class LayerFactories
+    public static class SampleLayers
     {
+        public static IEnumerable<LayerInfo> Layers;
+
         private static SharpMap.Data.Providers.GeometryFeatureProvider donutProvider;
-        static LayerFactories()
+        static SampleLayers()
         {
             // we createa a dummy data source that contains computed in-memory shapes
             var donuts = Providers.DonutProvider.CreateRandomDonuts(100);
 
             var fdt = new FeatureDataTable();
             int id = 0;
-            fdt.Columns.Add("Id", typeof(Int32));
+            fdt.Columns.Add("Id", typeof(int));
             foreach (var donut in donuts)
             {
                 var fdr = fdt.NewRow();
@@ -33,8 +37,11 @@ namespace Widgets
                 fdt.AddRow(fdr);
             }
 
-            // todo: check if the GeometryFeatureProvider uses some quadtree indexing
+            // GeometryFeatureProvider doesn't use quadtree indexing!
             donutProvider = new SharpMap.Data.Providers.GeometryFeatureProvider(fdt);
+
+            // initialize sample layers
+            Layers = GetSampleAreas().Concat(GetPOIs()).ToList();
         }
 
         /// <summary>
@@ -43,36 +50,50 @@ namespace Widgets
         /// </summary>
         /// <param name="pixelSize"> the optional map pixel size for dynamic scaling. </param>
         /// <returns> The collection of layers </returns>
-        public static IEnumerable<SharpMap.Layers.ILayer> BgFactory(double pixelSize = 1)
+        public static IEnumerable<LayerInfo> GetSampleAreas()
         {
             var x = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Data", "Shape", "world_countries_boundary_file_world_2002.shp");
 
-            // the map contains only one layer
-            yield return new VectorLayer("WorldCountries")
+            // word countries (colored by population density)
+            yield return new LayerInfo
             {
-                // set tranform to WGS84->Spherical_Mercator
-                CoordinateTransformation = new CoordinateTransformationFactory().CreateFromCoordinateSystems(GeographicCoordinateSystem.WGS84, ProjectedCoordinateSystem.WebMercator),
+                Name = "WorldCountries",
+                LayerCategory = LayerCategory.Area,
+                Visible = true,
+                LayerFactory = (theme, pixelSize) =>
+                new VectorLayer("WorldCountries")
+                {
+                    // set tranform to WGS84->Spherical_Mercator
+                    CoordinateTransformation = new CoordinateTransformationFactory().CreateFromCoordinateSystems(GeographicCoordinateSystem.WGS84, ProjectedCoordinateSystem.WebMercator),
 
-                // set the sharpmap provider for shape files as data source
-                DataSource = new SharpMap.Data.Providers.ShapeFile(x, false, true),
+                    // set the sharpmap provider for shape files as data source
+                    DataSource = new SharpMap.Data.Providers.ShapeFile(x, false, true),
 
-                // use a dynamic style for thematic mapping
-                // the lambda also takes the map instance into account (to scale the border width)
-                Theme = new CustomTheme(row => GetPopDensStyle(pixelSize, row))
+                    // use a dynamic style for thematic mapping
+                    // the lambda also takes the map instance into account (to scale the border width)
+                    Theme = new CustomTheme(row => GetPopDensStyle(pixelSize, row))
+                }
             };
 
-            // the map contains only one layer
-            yield return new VectorLayer("Donuts")
+            // computed shapes ("Donuts")
+            yield return new LayerInfo
             {
-                // set tranform to WGS84->Spherical_Mercator
-                CoordinateTransformation = new CoordinateTransformationFactory().CreateFromCoordinateSystems(GeographicCoordinateSystem.WGS84, ProjectedCoordinateSystem.WebMercator),
+                Name = "Donuts",
+                LayerCategory = LayerCategory.Area,
+                Visible = true,
+                LayerFactory = (theme, pixelSize) =>
+                new VectorLayer("Donuts")
+                {
+                    // set tranform to WGS84->Spherical_Mercator
+                    CoordinateTransformation = new CoordinateTransformationFactory().CreateFromCoordinateSystems(GeographicCoordinateSystem.WGS84, ProjectedCoordinateSystem.WebMercator),
 
-                // set the sharpmap provider for shape files as data source
-                DataSource = donutProvider,
+                    // set the sharpmap provider for shape files as data source
+                    DataSource = donutProvider,
 
-                // use a dynamic style for thematic mapping
-                // the lambda also takes the map instance into account (to scale the border width)
-                Theme = new CustomTheme(row => GetDonutStyle(pixelSize, row))
+                    // use a dynamic style for thematic mapping
+                    // the lambda also takes the map instance into account (to scale the border width)
+                    Theme = new CustomTheme(row => GetDonutStyle(pixelSize, row))
+                }
             };
         }
 
@@ -82,7 +103,7 @@ namespace Widgets
         /// </summary>
         /// <param name="pixelSize"> the optional map pixel size for dynamic scaling. </param>
         /// <returns> The collection of layers </returns>
-        public static IEnumerable<SharpMap.Layers.ILayer> FgFactory(double pixelSize = 1)
+        public static IEnumerable<LayerInfo> GetPOIs()
         {
             // insert address monitor layers
             var rootPath = System.AppDomain.CurrentDomain.BaseDirectory + "Data\\Poi";
@@ -90,9 +111,18 @@ namespace Widgets
             string[] poiFiles = System.IO.Directory.GetFiles(rootPath, "*.mdb");
             foreach (string poiFile in poiFiles)
             {
-                var layer = AMLayerFactory.CreateLayer(poiFile, bitmapPath);
-                layer.MaxVisible = 9999999999; // override the automatic display threshold
-                yield return layer;
+                yield return new LayerInfo
+                {
+                    Name = System.IO.Path.GetFileNameWithoutExtension(poiFile),
+                    LayerCategory = LayerCategory.Point,
+                    Visible = true,
+                    LayerFactory = (theme, pixelSize) =>
+                    {
+                        var layer = AMLayerFactory.CreateLayer(poiFile, bitmapPath);
+                        layer.MaxVisible = 9999999999; // override the automatic display threshold
+                        return layer;
+                    }
+                };
             }
         }
 
@@ -144,9 +174,6 @@ namespace Widgets
             var brush = new System.Drawing.Drawing2D.HatchBrush(
                 System.Drawing.Drawing2D.HatchStyle.DiagonalCross, colors[((int)row["Id"]) % colors.Length], 
                 Color.White);
-
-            // make fill color alpha-transparent
-//            fillColor = Color.FromArgb(180, fillColor.R, fillColor.G, fillColor.B);
 
             // set the border width depending on the map scale
             var pen = new Pen(Brushes.Black, (int)(50.0 / pixelSize)) { LineJoin = System.Drawing.Drawing2D.LineJoin.Round };

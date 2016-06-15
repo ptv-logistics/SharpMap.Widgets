@@ -3,18 +3,15 @@ using Ptv.XServer.Controls.Map.Layers;
 using Ptv.XServer.Controls.Map.Layers.Tiled;
 using Ptv.XServer.Controls.Map.Layers.Untiled;
 using Ptv.XServer.Demo.ShapeFile;
+using SharpMap.Common;
 using SharpMap.Data;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Widgets;
+using System.Linq;
 
 namespace SharpMap.Win
 {
@@ -26,6 +23,7 @@ namespace SharpMap.Win
         public Form1()
         {
             InitializeComponent();
+
             // using infinite-zoom, makes the widget less jaggy at deep zoom levels
             Ptv.XServer.Controls.Map.GlobalOptions.InfiniteZoom = true;
 
@@ -36,6 +34,13 @@ namespace SharpMap.Win
             // You need your own xServer-internet token for your application!
             formsMap1.XMapCredentials = "xtok:953B0471-1EB8-4E1C-B170-ACDF1B04D6B5";
 
+            // set silkysand as xMap theme
+            formsMap1.XMapStyle = "silkysand";
+
+            // disable the embedded layers control
+            formsMap1.ShowLayers = false;
+
+            // attach to selection event
             selectedRegions.CollectionChanged += SelectedRegions_CollectionChanged;
         }
 
@@ -59,26 +64,70 @@ namespace SharpMap.Win
             propertyGrid1.SelectedObject = new DictionaryPropertyGridAdapter(d);
         }
 
+        private void CheckedListBox1_ItemCheck(object sender, ItemCheckEventArgs e)
+        {
+            var layerName = checkedListBox1.SelectedItem.ToString();
+            var layerInfo = (from li in SampleLayers.Layers where li.Name == layerName select li).FirstOrDefault();
+            layerInfo.Visible = e.NewValue == CheckState.Checked;
+
+            if (layerInfo.LayerCategory == LayerCategory.Point)
+            {
+                if (SampleLayers.Layers.GetLayers(RenderingLayer.Foreground).Count() == 0)
+                    formsMap1.Layers.SetVisible(fgLayer, false);
+                else
+                {
+                    fgLayer.Refresh();
+                    formsMap1.Layers.SetVisible(fgLayer, true);
+                }
+            }
+            else
+            {
+                if (SampleLayers.Layers.GetLayers(RenderingLayer.Background).Count() == 0)
+                    formsMap1.Layers.SetVisible(bgLayer, false);
+                else
+                {
+                    // bust the tile cache
+                    ((SharpMapProvider)bgLayer.TiledProvider).CacheId = Guid.NewGuid().ToString();
+                    bgLayer.Refresh();
+                    formsMap1.Layers.SetVisible(bgLayer, true);
+                }
+            }
+        }
+
         private void Form1_Load(object sender, EventArgs e)
         {
             InitializeCustomLayers();
         }
 
+        UntiledLayer fgLayer;
+        TiledLayer bgLayer;
         public void InitializeCustomLayers()
         {
-            var sharpMapLayer = new TiledLayer("sharpmapbg")
+            IEnumerable<LayerInfo> sampleInfo = SampleLayers.Layers; 
+
+            foreach(var i in sampleInfo)
             {
-                TiledProvider = new SharpMapProvider(LayerFactories.BgFactory),
+                this.checkedListBox1.Items.Add(i.Name, i.Visible);
+            }
+
+            checkedListBox1.ItemCheck += CheckedListBox1_ItemCheck;
+
+            bgLayer = new TiledLayer("sharpmapbg")
+            {
+                TiledProvider = new SharpMapProvider(s => sampleInfo.GetLayers(RenderingLayer.Background, s))
+                {
+                    CacheId = Guid.NewGuid().ToString()
+                }
             };
 
-            this.formsMap1.Layers.InsertBefore(sharpMapLayer, "Labels");
+            formsMap1.Layers.InsertBefore(bgLayer, "Labels");
 
-            var fgLayer = new UntiledLayer("sharpmapfg")
+            fgLayer = new UntiledLayer("sharpmapfg")
             {
-                UntiledProvider = new SharpMapProvider(LayerFactories.FgFactory)
+                UntiledProvider = new SharpMapProvider(s => sampleInfo.GetLayers(RenderingLayer.Foreground, s)),
             };
 
-            this.formsMap1.Layers.Add(fgLayer);
+            formsMap1.Layers.Add(fgLayer);
 
             // insert layer with two canvases
             var layer = new BaseLayer("Selection")
@@ -90,7 +139,7 @@ namespace SharpMap.Win
                 },
             };
 
-            this.formsMap1.Layers.Add(layer);
+            formsMap1.Layers.Add(layer);
         }
     }
 }

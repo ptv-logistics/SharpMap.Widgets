@@ -95,6 +95,9 @@ namespace Ptv.XServer.Demo.ShapeFile
                 foreach (var l in sharpMapFactory(sharpMap.PixelSize))
                     sharpMap.Layers.Add(l);
 
+                if (sharpMap.Layers.Count == 0)
+                    return null;
+
                 // render the map image
                 using (var img = sharpMap.GetMap())
                 {
@@ -113,7 +116,7 @@ namespace Ptv.XServer.Demo.ShapeFile
         #endregion // doc:GetImageStream method
 
         /// <inheritdoc/>
-        public string CacheId { get { return "SharpMapTiledProvider"; } }
+        public string CacheId { get; set; }
 
         /// <inheritdoc/>
         public int MaxZoom { get { return 19; } }
