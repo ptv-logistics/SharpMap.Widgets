@@ -38,7 +38,7 @@ namespace Providers
             // the donut shapes are calculated in a mercator (= conformal) projection
             // This means we can associate units with meters and angles are correct
             // see http://bl.ocks.org/oliverheilig/29e494c33ef58c6d5839
-            var mercP = GeoTools.Wgs2SphereMercator(new Coordinate(lon, lat));
+            var mercP = GeoTools.Wgs2SphereMercator(new Coordinate(lon, lat), true);
 
             // in our conformal projection we have to adopt the size depending on the latitude
             var f = 1.0 / Math.Cos((lat / 360) * 2 * Math.PI);
@@ -60,7 +60,7 @@ namespace Providers
                 var yPos = mercP.Y + (radiusY * Math.Cos(arc)) * Math.Sin(rot * Math.PI) + (radiusX * Math.Sin(arc)) * Math.Cos(rot * Math.PI);
 
                 // the computed coordinates are transformed back to WGS
-                shell.Add(GeoTools.SphereMercator2Wgs(new Coordinate(xPos, yPos)));
+                shell.Add(GeoTools.SphereMercator2Wgs(new Coordinate(xPos, yPos), true));
             }
             shell.Add(shell[0]); // close ring
 
@@ -73,7 +73,7 @@ namespace Providers
                 var xPos = mercP.X - ((radiusX - buffer) * Math.Sin(arc)) * Math.Sin(rot * Math.PI) + ((radiusY - buffer) * Math.Cos(arc)) * Math.Cos(rot * Math.PI);
                 var yPos = mercP.Y + ((radiusY - buffer) * Math.Cos(arc)) * Math.Sin(rot * Math.PI) + ((radiusX - buffer) * Math.Sin(arc)) * Math.Cos(rot * Math.PI);
 
-                hole.Add(GeoTools.SphereMercator2Wgs(new Coordinate(xPos, yPos)));
+                hole.Add(GeoTools.SphereMercator2Wgs(new Coordinate(xPos, yPos), true));
             }
             hole.Add(hole[0]); // close ring
 

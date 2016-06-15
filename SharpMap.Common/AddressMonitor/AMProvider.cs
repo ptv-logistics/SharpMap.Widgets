@@ -243,7 +243,7 @@ namespace Ptv.Controls.Map.AddressMonitor
 
         public Collection<IGeometry> GetGeometriesInView(Envelope bbox)
         {
-            bbox = GeoTools.Wgs2SphereMercator(bbox);
+            bbox = GeoTools.Wgs2SphereMercator(bbox, true);
             var result = new Collection<IGeometry>();
             using (var conn = new OleDbConnection(_ConnectionString))
             {
@@ -262,7 +262,8 @@ namespace Ptv.Controls.Map.AddressMonitor
                         while (dr.Read())
                         {
                             if (dr[0] != DBNull.Value && dr[1] != DBNull.Value)
-                                result.Add(new Point(GeoTools.SphereMercator2Wgs(new Coordinate(System.Convert.ToDouble(dr[0]), System.Convert.ToDouble(dr[1])))));
+                                result.Add(new Point(GeoTools.SphereMercator2Wgs(
+                                    new Coordinate(System.Convert.ToDouble(dr[0]), System.Convert.ToDouble(dr[1])), true)));
                         }
                     }
                     conn.Close();
@@ -274,7 +275,7 @@ namespace Ptv.Controls.Map.AddressMonitor
 
         public Collection<uint> GetObjectIDsInView(Envelope bbox)
         {
-            bbox = GeoTools.Wgs2SphereMercator(bbox);
+            bbox = GeoTools.Wgs2SphereMercator(bbox, true);
             Collection<uint> objectlist = new Collection<uint>();
             using (System.Data.OleDb.OleDbConnection conn = new OleDbConnection(_ConnectionString))
             {
@@ -314,7 +315,7 @@ namespace Ptv.Controls.Map.AddressMonitor
                         {
                             //If the read row is OK, create a point geometry from the XColumn and YColumn and return it
                             if (dr[0] != DBNull.Value && dr[1] != DBNull.Value)
-                                return new Point(GeoTools.SphereMercator2Wgs(new Coordinate(Convert.ToDouble(dr[0]), System.Convert.ToDouble(dr[1]))));
+                                return new Point(GeoTools.SphereMercator2Wgs(new Coordinate(Convert.ToDouble(dr[0]), System.Convert.ToDouble(dr[1])), true));
                         }
                     }
                     conn.Close();
@@ -330,7 +331,7 @@ namespace Ptv.Controls.Map.AddressMonitor
 
         public void ExecuteIntersectionQuery(Envelope bbox, FeatureDataSet ds)
         {
-            bbox = GeoTools.Wgs2SphereMercator(bbox);
+            bbox = GeoTools.Wgs2SphereMercator(bbox, true);
 
             using (var conn = new OleDbConnection(_ConnectionString))
             {
@@ -359,7 +360,7 @@ namespace Ptv.Controls.Map.AddressMonitor
                             foreach (System.Data.DataColumn col in ds2.Tables[0].Columns)
                                 fdr[col.ColumnName] = dr[col];
                             if (dr[this.XColumn] != DBNull.Value && dr[this.YColumn] != DBNull.Value)
-                                fdr.Geometry = new Point(GeoTools.SphereMercator2Wgs(new Coordinate(System.Convert.ToDouble(dr[this.XColumn]), System.Convert.ToDouble(dr[this.YColumn]))));
+                                fdr.Geometry = new Point(GeoTools.SphereMercator2Wgs(new Coordinate(System.Convert.ToDouble(dr[this.XColumn]), System.Convert.ToDouble(dr[this.YColumn])), true));
                             fdt.AddRow(fdr);
                         }
                         ds.Tables.Add(fdt);
@@ -386,7 +387,7 @@ namespace Ptv.Controls.Map.AddressMonitor
                         {
                             //If the read row is OK, create a point geometry from the XColumn and YColumn and return it
                             if (dr[0] != DBNull.Value && dr[1] != DBNull.Value && dr[2] != DBNull.Value && dr[3] != DBNull.Value)
-                                return GeoTools.SphereMercator2Wgs(new Envelope(System.Convert.ToDouble(dr[0]), System.Convert.ToDouble(dr[1]), System.Convert.ToDouble(dr[2]), System.Convert.ToDouble(dr[3])));
+                                return GeoTools.SphereMercator2Wgs(new Envelope(System.Convert.ToDouble(dr[0]), System.Convert.ToDouble(dr[1]), System.Convert.ToDouble(dr[2]), System.Convert.ToDouble(dr[3])), true);
                         }
                     }
                     conn.Close();

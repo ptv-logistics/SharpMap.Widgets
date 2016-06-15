@@ -24,11 +24,11 @@ namespace SharpMap.Common
 
             // now calculate a mercator envelope of the corresponsing size
             var mSize = mercPerPix * size2;
-            var mp = GeoTools.Wgs2SphereMercator(new Coordinate(lon, lat));
+            var mp = GeoTools.Wgs2SphereMercator(new Coordinate(lon, lat), true);
             var envelope = new Envelope(mp.X - mSize, mp.X + mSize, mp.Y - mSize, mp.Y + mSize);
 
             // and transform it to wgs
-            var wgsEnvelope = GeoTools.SphereMercator2Wgs(envelope);
+            var wgsEnvelope = GeoTools.SphereMercator2Wgs(envelope, true);
 
             // get all fg (= point) vector layers
             var fgTopDown = (from l in layers.GetLayers(RenderingLayer.Foreground) where l is VectorLayer select l as VectorLayer).Reverse();

@@ -1,0 +1,2366 @@
+<?xml version="1.0" encoding="utf-8"?>
+<definitions xmlns:ns2="http://common.xserver.ptvag.com" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://jwsdp.xmap.xserver.ptvag.com" xmlns:ns1="http://xmap.xserver.ptvag.com" xmlns:ns0="http://types.xmap.xserver.ptvag.com" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:ns3="http://exception.core.jabba.ptvag.com" name="XMapWSService" targetNamespace="http://jwsdp.xmap.xserver.ptvag.com" xmlns="http://schemas.xmlsoap.org/wsdl/">
+  <types>
+    <xsd:schema xmlns:tns="http://exception.core.jabba.ptvag.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ns0="http://wrappertypes.service.jabba.ptvag.com" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:ns3="http://exception.core.jabba.ptvag.com" elementFormDefault="qualified" targetNamespace="http://exception.core.jabba.ptvag.com">
+      <xsd:complexType name="StackElement">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="cause" nillable="true" type="tns:StackElement" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="wrappedContext" nillable="true" type="ns0:ArrayOfString" />
+        </xsd:sequence>
+        <xsd:attribute name="className" type="xsd:string" use="optional" />
+        <xsd:attribute name="errorKey" type="xsd:string" use="optional" />
+        <xsd:attribute name="message" type="xsd:string" use="optional" />
+      </xsd:complexType>
+      <xsd:complexType name="DatabaseException">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns:SystemException">
+            <xsd:sequence />
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:element name="DatabaseException" type="tns:DatabaseException" />
+      <xsd:complexType name="ParameterNotSetException">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns:IllegalParameterException">
+            <xsd:sequence />
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:element name="ParameterNotSetException" type="tns:ParameterNotSetException" />
+      <xsd:complexType name="IllegalParameterException">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns:BusinessException">
+            <xsd:sequence />
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:element name="IllegalParameterException" type="tns:IllegalParameterException" />
+      <xsd:complexType name="UnexpectedException">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns:SystemException">
+            <xsd:sequence />
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:element name="UnexpectedException" type="tns:UnexpectedException" />
+      <xsd:complexType name="OptimisticRollbackException">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns:SystemException">
+            <xsd:sequence />
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:element name="OptimisticRollbackException" type="tns:OptimisticRollbackException" />
+      <xsd:complexType name="ConstraintViolationException">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns:DatabaseException">
+            <xsd:sequence />
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:element name="ConstraintViolationException" type="tns:ConstraintViolationException" />
+      <xsd:complexType name="TableNotFoundException">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns:DatabaseException">
+            <xsd:sequence />
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:element name="TableNotFoundException" type="tns:TableNotFoundException" />
+      <xsd:complexType name="RemoteAccessException">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns:SystemException">
+            <xsd:sequence />
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:element name="RemoteAccessException" type="tns:RemoteAccessException" />
+      <xsd:complexType name="BaseException">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="stackElement" nillable="true" type="tns:StackElement" />
+        </xsd:sequence>
+        <xsd:attribute name="transactionId" type="xsd:string" use="optional" />
+      </xsd:complexType>
+      <xsd:element name="BaseException" type="tns:BaseException" />
+      <xsd:complexType name="SystemException">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns:BaseException">
+            <xsd:sequence />
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:element name="SystemException" type="tns:SystemException" />
+      <xsd:complexType name="BusinessException">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns:BaseException">
+            <xsd:sequence />
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:element name="BusinessException" type="tns:BusinessException" />
+      <xsd:complexType name="CreateException">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns:SystemException">
+            <xsd:sequence />
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:element name="CreateException" type="tns:CreateException" />
+      <xsd:complexType name="RemoveException">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns:SystemException">
+            <xsd:sequence />
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:element name="RemoveException" type="tns:RemoveException" />
+      <xsd:complexType name="FinderException">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns:SystemException">
+            <xsd:sequence />
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:element name="FinderException" type="tns:FinderException" />
+      <xsd:complexType name="ObjectNotFoundException">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns:FinderException">
+            <xsd:sequence />
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:element name="ObjectNotFoundException" type="tns:ObjectNotFoundException" />
+      <xsd:complexType name="DuplicateKeyException">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns:CreateException">
+            <xsd:sequence />
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:element name="DuplicateKeyException" type="tns:DuplicateKeyException" />
+    </xsd:schema>
+    <xsd:schema xmlns:soap11-enc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tns="http://value.core.jabba.ptvag.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://value.core.jabba.ptvag.com">
+      <xsd:complexType name="TransientVO" abstract="true">
+        <xsd:sequence />
+      </xsd:complexType>
+    </xsd:schema>
+    <xsd:schema xmlns:tns="http://baseservices.service.jabba.ptvag.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ns0="http://value.core.jabba.ptvag.com" xmlns="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://baseservices.service.jabba.ptvag.com">
+      <xsd:import namespace="http://value.core.jabba.ptvag.com" />
+      <xsd:complexType name="CallerContext">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ns0:TransientVO">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="wrappedProperties" nillable="true" type="tns:ArrayOfCallerContextProperty" />
+            </xsd:sequence>
+            <xsd:attribute name="log1" type="xsd:string" use="optional" />
+            <xsd:attribute name="log2" type="xsd:string" use="optional" />
+            <xsd:attribute name="log3" type="xsd:string" use="optional" />
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="CallerContextProperty">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ns0:TransientVO">
+            <xsd:sequence />
+            <xsd:attribute name="key" type="xsd:string" use="optional" />
+            <xsd:attribute name="value" type="xsd:string" use="optional" />
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfCallerContextProperty">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="CallerContextProperty" nillable="true" type="tns:CallerContextProperty" />
+        </xsd:sequence>
+      </xsd:complexType>
+    </xsd:schema>
+    <xsd:schema xmlns:tns="http://wrappertypes.service.jabba.ptvag.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://wrappertypes.service.jabba.ptvag.com">
+      <xsd:complexType name="ArrayOfCalendar">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="Calendar" nillable="true" type="xsd:dateTime" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfArrayOfCalendar">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ArrayOfCalendar" nillable="true" type="tns:ArrayOfCalendar" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfString">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="String" nillable="true" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfArrayOfString">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ArrayOfString" nillable="true" type="tns:ArrayOfString" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfArrayOfByte">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ArrayOfByte" nillable="true" type="xsd:base64Binary" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfShort">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="Short" type="xsd:short" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfArrayOfShort">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ArrayOfShort" nillable="true" type="tns:ArrayOfShort" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfInt">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="Int" type="xsd:int" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfArrayOfInt">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ArrayOfInt" nillable="true" type="tns:ArrayOfInt" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfLong">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="Long" type="xsd:long" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfArrayOfLong">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ArrayOfLong" nillable="true" type="tns:ArrayOfLong" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfFloat">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="Float" type="xsd:float" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfArrayOfFloat">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ArrayOfFloat" nillable="true" type="tns:ArrayOfFloat" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfDouble">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="Double" type="xsd:double" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfArrayOfDouble">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ArrayOfDouble" nillable="true" type="tns:ArrayOfDouble" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfBoolean">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="Boolean" type="xsd:boolean" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfArrayOfBoolean">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ArrayOfBoolean" nillable="true" type="tns:ArrayOfBoolean" />
+        </xsd:sequence>
+      </xsd:complexType>
+    </xsd:schema>
+    <xsd:schema xmlns:ns2="http://exception.core.jabba.ptvag.com" xmlns:tns="http://common.xserver.ptvag.com" xmlns:ns1="http://wrappertypes.service.jabba.ptvag.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ns0="http://value.core.jabba.ptvag.com" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:ns3="http://exception.core.jabba.ptvag.com" elementFormDefault="qualified" targetNamespace="http://common.xserver.ptvag.com">
+      <xsd:import namespace="http://wrappertypes.service.jabba.ptvag.com" />
+      <xsd:import namespace="http://exception.core.jabba.ptvag.com" />
+      <xsd:import namespace="http://value.core.jabba.ptvag.com" />
+      <xsd:complexType name="RequestOptions">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ns0:TransientVO">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="wrappedResponseGeometry" nillable="true" type="tns:ArrayOfGeometryEncoding" />
+            </xsd:sequence>
+            <xsd:attribute name="coordFormat" type="tns:CoordFormat" use="required" />
+            <xsd:attribute name="profile" type="xsd:string" use="optional" />
+            <xsd:attribute name="profileXMLSnippet" type="xsd:string" use="optional" />
+            <xsd:attribute name="srId" type="xsd:string" use="optional" />
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfRequestOptions">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="RequestOptions" nillable="true" type="tns:RequestOptions" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfArrayOfRequestOptions">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ArrayOfRequestOptions" nillable="true" type="tns:ArrayOfRequestOptions" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:simpleType name="GeometryEncoding">
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="PLAIN" />
+          <xsd:enumeration value="WKB" />
+          <xsd:enumeration value="WKT" />
+          <xsd:enumeration value="KML" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:complexType name="ArrayOfGeometryEncoding">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="GeometryEncoding" type="tns:GeometryEncoding" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfArrayOfGeometryEncoding">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ArrayOfGeometryEncoding" nillable="true" type="tns:ArrayOfGeometryEncoding" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:simpleType name="CoordFormat">
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="OG_GEODECIMAL" />
+          <xsd:enumeration value="PTV_MERCATOR" />
+          <xsd:enumeration value="PTV_GEOMINSEC" />
+          <xsd:enumeration value="PTV_GEODECIMAL" />
+          <xsd:enumeration value="PTV_CONFORM" />
+          <xsd:enumeration value="PTV_SUPERCONFORM" />
+          <xsd:enumeration value="PTV_SMARTUNITS" />
+          <xsd:enumeration value="OG_SRID" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:complexType name="ArrayOfCoordFormat">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="CoordFormat" type="tns:CoordFormat" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfArrayOfCoordFormat">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ArrayOfCoordFormat" nillable="true" type="tns:ArrayOfCoordFormat" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="BoundingBox">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ns0:TransientVO">
+            <xsd:sequence>
+              <xsd:element minOccurs="0" maxOccurs="1" name="leftTop" nillable="true" type="tns:Point" />
+              <xsd:element minOccurs="0" maxOccurs="1" name="rightBottom" nillable="true" type="tns:Point" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfBoundingBox">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="BoundingBox" nillable="true" type="tns:BoundingBox" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfArrayOfBoundingBox">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ArrayOfBoundingBox" nillable="true" type="tns:ArrayOfBoundingBox" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="EncodedGeometry" abstract="true">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns:EncodedGeometryBase">
+            <xsd:sequence>
+              <xsd:element minOccurs="0" maxOccurs="1" name="kml" nillable="true" type="tns:KML" />
+            </xsd:sequence>
+            <xsd:attribute name="wkb" type="xsd:base64Binary" use="optional" />
+            <xsd:attribute name="wkt" type="xsd:string" use="optional" />
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfEncodedGeometry">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="EncodedGeometry" nillable="true" type="tns:EncodedGeometry" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfArrayOfEncodedGeometry">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ArrayOfEncodedGeometry" nillable="true" type="tns:ArrayOfEncodedGeometry" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="LinearRing">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns:EncodedGeometry">
+            <xsd:sequence>
+              <xsd:element minOccurs="0" maxOccurs="1" name="linearRing" nillable="true" type="tns:PlainLinearRing" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfLinearRing">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="LinearRing" nillable="true" type="tns:LinearRing" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfArrayOfLinearRing">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ArrayOfLinearRing" nillable="true" type="tns:ArrayOfLinearRing" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="PlainLinearRing">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns:PlainGeometryBase">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="wrappedPoints" nillable="true" type="tns:ArrayOfPlainPoint" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfPlainLinearRing">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="PlainLinearRing" nillable="true" type="tns:PlainLinearRing" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfArrayOfPlainLinearRing">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ArrayOfPlainLinearRing" nillable="true" type="tns:ArrayOfPlainLinearRing" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="Polygon">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns:EncodedGeometry">
+            <xsd:sequence>
+              <xsd:element minOccurs="0" maxOccurs="1" name="polygon" nillable="true" type="tns:PlainPolygon" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfPolygon">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="Polygon" nillable="true" type="tns:Polygon" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfArrayOfPolygon">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ArrayOfPolygon" nillable="true" type="tns:ArrayOfPolygon" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="PlainPolygon">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns:PlainGeometryBase">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="wrappedLinearRings" nillable="true" type="tns:ArrayOfPlainLinearRing" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfPlainPolygon">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="PlainPolygon" nillable="true" type="tns:PlainPolygon" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfArrayOfPlainPolygon">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ArrayOfPlainPolygon" nillable="true" type="tns:ArrayOfPlainPolygon" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="LineString">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns:EncodedGeometry">
+            <xsd:sequence>
+              <xsd:element minOccurs="0" maxOccurs="1" name="lineString" nillable="true" type="tns:PlainLineString" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfLineString">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="LineString" nillable="true" type="tns:LineString" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfArrayOfLineString">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ArrayOfLineString" nillable="true" type="tns:ArrayOfLineString" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="PlainLineString">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns:PlainGeometryBase">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="wrappedPoints" nillable="true" type="tns:ArrayOfPlainPoint" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfPlainLineString">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="PlainLineString" nillable="true" type="tns:PlainLineString" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfArrayOfPlainLineString">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ArrayOfPlainLineString" nillable="true" type="tns:ArrayOfPlainLineString" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="Point">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns:EncodedGeometry">
+            <xsd:sequence>
+              <xsd:element minOccurs="0" maxOccurs="1" name="point" nillable="true" type="tns:PlainPoint" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfPoint">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="Point" nillable="true" type="tns:Point" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfArrayOfPoint">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ArrayOfPoint" nillable="true" type="tns:ArrayOfPoint" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="XServiceException">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ns2:BusinessException">
+            <xsd:sequence />
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:element name="XServiceException" type="tns:XServiceException" />
+      <xsd:complexType name="PlainMultiPoint">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns:PlainGeometryBase">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="wrappedPoints" nillable="true" type="tns:ArrayOfPlainPoint" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfPlainMultiPoint">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="PlainMultiPoint" nillable="true" type="tns:PlainMultiPoint" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfArrayOfPlainMultiPoint">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ArrayOfPlainMultiPoint" nillable="true" type="tns:ArrayOfPlainMultiPoint" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="PlainMultiLineString">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns:PlainGeometryBase">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="wrappedLineStrings" nillable="true" type="tns:ArrayOfPlainLineString" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfPlainMultiLineString">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="PlainMultiLineString" nillable="true" type="tns:PlainMultiLineString" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfArrayOfPlainMultiLineString">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ArrayOfPlainMultiLineString" nillable="true" type="tns:ArrayOfPlainMultiLineString" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="PlainMultiPolygon">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns:PlainGeometryBase">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="wrappedPolygons" nillable="true" type="tns:ArrayOfPlainPolygon" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfPlainMultiPolygon">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="PlainMultiPolygon" nillable="true" type="tns:PlainMultiPolygon" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfArrayOfPlainMultiPolygon">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ArrayOfPlainMultiPolygon" nillable="true" type="tns:ArrayOfPlainMultiPolygon" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="PlainGeometryCollection">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns:PlainGeometryBase">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="wrappedGeometries" nillable="true" type="tns:ArrayOfPlainGeometryBase" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfPlainGeometryCollection">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="PlainGeometryCollection" nillable="true" type="tns:PlainGeometryCollection" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfArrayOfPlainGeometryCollection">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ArrayOfPlainGeometryCollection" nillable="true" type="tns:ArrayOfPlainGeometryCollection" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="MultiPoint">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns:EncodedGeometry">
+            <xsd:sequence>
+              <xsd:element minOccurs="0" maxOccurs="1" name="multiPoint" nillable="true" type="tns:PlainMultiPoint" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfMultiPoint">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="MultiPoint" nillable="true" type="tns:MultiPoint" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfArrayOfMultiPoint">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ArrayOfMultiPoint" nillable="true" type="tns:ArrayOfMultiPoint" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="MultiLineString">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns:EncodedGeometry">
+            <xsd:sequence>
+              <xsd:element minOccurs="0" maxOccurs="1" name="multiLineString" nillable="true" type="tns:PlainMultiLineString" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfMultiLineString">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="MultiLineString" nillable="true" type="tns:MultiLineString" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfArrayOfMultiLineString">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ArrayOfMultiLineString" nillable="true" type="tns:ArrayOfMultiLineString" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="MultiPolygon">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns:EncodedGeometry">
+            <xsd:sequence>
+              <xsd:element minOccurs="0" maxOccurs="1" name="multiPolygon" nillable="true" type="tns:PlainMultiPolygon" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfMultiPolygon">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="MultiPolygon" nillable="true" type="tns:MultiPolygon" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfArrayOfMultiPolygon">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ArrayOfMultiPolygon" nillable="true" type="tns:ArrayOfMultiPolygon" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="GeometryCollection">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns:EncodedGeometry">
+            <xsd:sequence>
+              <xsd:element minOccurs="0" maxOccurs="1" name="geometryCollection" nillable="true" type="tns:PlainGeometryCollection" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfGeometryCollection">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="GeometryCollection" nillable="true" type="tns:GeometryCollection" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfArrayOfGeometryCollection">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ArrayOfGeometryCollection" nillable="true" type="tns:ArrayOfGeometryCollection" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="PlainGeometryBase">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ns0:TransientVO">
+            <xsd:sequence />
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfPlainGeometryBase">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="PlainGeometryBase" nillable="true" type="tns:PlainGeometryBase" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfArrayOfPlainGeometryBase">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ArrayOfPlainGeometryBase" nillable="true" type="tns:ArrayOfPlainGeometryBase" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="PlainPoint">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns:PlainGeometryBase">
+            <xsd:sequence />
+            <xsd:attribute name="x" type="xsd:double" use="required" />
+            <xsd:attribute name="y" type="xsd:double" use="required" />
+            <xsd:attribute name="z" type="xsd:double" use="optional" />
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfPlainPoint">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="PlainPoint" nillable="true" type="tns:PlainPoint" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfArrayOfPlainPoint">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ArrayOfPlainPoint" nillable="true" type="tns:ArrayOfPlainPoint" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="EncodedGeometryBase" abstract="true">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ns0:TransientVO">
+            <xsd:sequence />
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfEncodedGeometryBase">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="EncodedGeometryBase" nillable="true" type="tns:EncodedGeometryBase" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfArrayOfEncodedGeometryBase">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ArrayOfEncodedGeometryBase" nillable="true" type="tns:ArrayOfEncodedGeometryBase" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:simpleType name="ErrorCode">
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="REQUEST_INVALID_WKT" />
+          <xsd:enumeration value="REQUEST_INVALID_WKB" />
+          <xsd:enumeration value="REQUEST_INVALID_KML" />
+          <xsd:enumeration value="KML_PLACEMARK_NOT_FOUND" />
+          <xsd:enumeration value="CONVERT_GEOMETRY_OBJECT" />
+          <xsd:enumeration value="CONVERT_COORDINATE_FORMAT" />
+          <xsd:enumeration value="GEOMETRY_ENCODING" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:complexType name="ArrayOfErrorCode">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ErrorCode" type="tns:ErrorCode" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfArrayOfErrorCode">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ArrayOfErrorCode" nillable="true" type="tns:ArrayOfErrorCode" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="KML">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ns0:TransientVO">
+            <xsd:sequence>
+              <xsd:element minOccurs="0" maxOccurs="1" name="wrappedPlacemarks" nillable="true" type="ns1:ArrayOfString" />
+            </xsd:sequence>
+            <xsd:attribute name="kml" type="xsd:string" use="optional" />
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfKML">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="KML" nillable="true" type="tns:KML" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfArrayOfKML">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ArrayOfKML" nillable="true" type="tns:ArrayOfKML" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:simpleType name="JobStatus">
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="QUEUING" />
+          <xsd:enumeration value="RUNNING" />
+          <xsd:enumeration value="STOPPING" />
+          <xsd:enumeration value="SUCCEEDED" />
+          <xsd:enumeration value="FAILED" />
+          <xsd:enumeration value="DELETED" />
+          <xsd:enumeration value="UNKNOWN" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:complexType name="ArrayOfJobStatus">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="JobStatus" type="tns:JobStatus" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfArrayOfJobStatus">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ArrayOfJobStatus" nillable="true" type="tns:ArrayOfJobStatus" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="Job">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ns0:TransientVO">
+            <xsd:sequence>
+              <xsd:element minOccurs="0" maxOccurs="1" name="progress" nillable="true" type="tns:JobProgress" />
+            </xsd:sequence>
+            <xsd:attribute name="elapsedTime" type="xsd:int" use="required" />
+            <xsd:attribute name="id" type="xsd:string" use="optional" />
+            <xsd:attribute name="status" type="tns:JobStatus" use="required" />
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfJob">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="Job" nillable="true" type="tns:Job" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfArrayOfJob">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ArrayOfJob" nillable="true" type="tns:ArrayOfJob" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="JobProgress" abstract="true">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ns0:TransientVO">
+            <xsd:sequence />
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfJobProgress">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="JobProgress" nillable="true" type="tns:JobProgress" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfArrayOfJobProgress">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ArrayOfJobProgress" nillable="true" type="tns:ArrayOfJobProgress" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="BulkProgress">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns:JobProgress">
+            <xsd:sequence />
+            <xsd:attribute name="failed" type="xsd:int" use="required" />
+            <xsd:attribute name="remaining" type="xsd:int" use="required" />
+            <xsd:attribute name="successful" type="xsd:int" use="required" />
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfBulkProgress">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="BulkProgress" nillable="true" type="tns:BulkProgress" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfArrayOfBulkProgress">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ArrayOfBulkProgress" nillable="true" type="tns:ArrayOfBulkProgress" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="DistanceMatrixProgress">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns:JobProgress">
+            <xsd:sequence />
+            <xsd:attribute name="currentRowIndex" type="xsd:int" use="required" />
+            <xsd:attribute name="lastRowIndex" type="xsd:int" use="required" />
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfDistanceMatrixProgress">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="DistanceMatrixProgress" nillable="true" type="tns:DistanceMatrixProgress" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfArrayOfDistanceMatrixProgress">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ArrayOfDistanceMatrixProgress" nillable="true" type="tns:ArrayOfDistanceMatrixProgress" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="WatchOptions">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ns0:TransientVO">
+            <xsd:sequence />
+            <xsd:attribute name="maximumPollingPeriod" type="xsd:int" use="optional" />
+            <xsd:attribute name="progressUpdatePeriod" type="xsd:int" use="optional" />
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfWatchOptions">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="WatchOptions" nillable="true" type="tns:WatchOptions" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfArrayOfWatchOptions">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ArrayOfWatchOptions" nillable="true" type="tns:ArrayOfWatchOptions" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="PlanProgress">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns:JobProgress">
+            <xsd:sequence>
+              <xsd:element minOccurs="0" maxOccurs="1" name="distanceMatrixCalculationProgress" nillable="true" type="tns:DistanceMatrixCalculationProgress" />
+              <xsd:element minOccurs="0" maxOccurs="1" name="improvementProgress" nillable="true" type="tns:ImprovementProgress" />
+            </xsd:sequence>
+            <xsd:attribute name="action" type="xsd:string" use="optional" />
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfPlanProgress">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="PlanProgress" nillable="true" type="tns:PlanProgress" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfArrayOfPlanProgress">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ArrayOfPlanProgress" nillable="true" type="tns:ArrayOfPlanProgress" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="DistanceMatrixCalculationProgress">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ns0:TransientVO">
+            <xsd:sequence>
+              <xsd:element minOccurs="0" maxOccurs="1" name="currentDistanceMatrixProgress" nillable="true" type="tns:DistanceMatrixProgress" />
+            </xsd:sequence>
+            <xsd:attribute name="currentDimaIndex" type="xsd:int" use="required" />
+            <xsd:attribute name="dimaId" type="xsd:int" use="required" />
+            <xsd:attribute name="lastDimaIndex" type="xsd:int" use="required" />
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfDistanceMatrixCalculationProgress">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="DistanceMatrixCalculationProgress" nillable="true" type="tns:DistanceMatrixCalculationProgress" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfArrayOfDistanceMatrixCalculationProgress">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ArrayOfDistanceMatrixCalculationProgress" nillable="true" type="tns:ArrayOfDistanceMatrixCalculationProgress" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ImprovementProgress">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ns0:TransientVO">
+            <xsd:sequence>
+              <xsd:element minOccurs="0" maxOccurs="1" name="bestPlan" nillable="true" type="tns:KeyFigures" />
+              <xsd:element minOccurs="0" maxOccurs="1" name="currentPlan" nillable="true" type="tns:KeyFigures" />
+              <xsd:element minOccurs="0" maxOccurs="1" name="initialPlan" nillable="true" type="tns:KeyFigures" />
+            </xsd:sequence>
+            <xsd:attribute name="availableMachineTime" type="xsd:int" use="required" />
+            <xsd:attribute name="iterationIndex" type="xsd:int" use="required" />
+            <xsd:attribute name="numberOfImprovements" type="xsd:int" use="required" />
+            <xsd:attribute name="usedMachineTime" type="xsd:int" use="required" />
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfImprovementProgress">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ImprovementProgress" nillable="true" type="tns:ImprovementProgress" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfArrayOfImprovementProgress">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ArrayOfImprovementProgress" nillable="true" type="tns:ArrayOfImprovementProgress" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="KeyFigures">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ns0:TransientVO">
+            <xsd:sequence />
+            <xsd:attribute name="costOfObjectiveFunction" type="xsd:int" use="required" />
+            <xsd:attribute name="numberOfInfeasibleOrders" type="xsd:int" use="required" />
+            <xsd:attribute name="numberOfScheduledOrders" type="xsd:int" use="required" />
+            <xsd:attribute name="numberOfScheduledVehicles" type="xsd:int" use="required" />
+            <xsd:attribute name="numberOfUnscheduledOrders" type="xsd:int" use="required" />
+            <xsd:attribute name="totalChainCost" type="xsd:int" use="required" />
+            <xsd:attribute name="totalChainPeriod" type="xsd:int" use="required" />
+            <xsd:attribute name="totalTourCost" type="xsd:int" use="required" />
+            <xsd:attribute name="totalTourCount" type="xsd:int" use="required" />
+            <xsd:attribute name="totalTourDistance" type="xsd:int" use="required" />
+            <xsd:attribute name="totalTourDrivingPeriod" type="xsd:int" use="required" />
+            <xsd:attribute name="totalTourPeriod" type="xsd:int" use="required" />
+            <xsd:attribute name="totalTourWaitingPeriod" type="xsd:int" use="required" />
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfKeyFigures">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="KeyFigures" nillable="true" type="tns:KeyFigures" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfArrayOfKeyFigures">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ArrayOfKeyFigures" nillable="true" type="tns:ArrayOfKeyFigures" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="OptimizationProgress">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ns0:TransientVO">
+            <xsd:sequence />
+            <xsd:attribute name="currentLoopIndex" type="xsd:int" use="required" />
+            <xsd:attribute name="lastLoopIndex" type="xsd:int" use="required" />
+            <xsd:attribute name="progress" type="xsd:int" use="required" />
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfOptimizationProgress">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="OptimizationProgress" nillable="true" type="tns:OptimizationProgress" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfArrayOfOptimizationProgress">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ArrayOfOptimizationProgress" nillable="true" type="tns:ArrayOfOptimizationProgress" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ClusterProgress">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns:JobProgress">
+            <xsd:sequence>
+              <xsd:element minOccurs="0" maxOccurs="1" name="distanceMatrixProgress" nillable="true" type="tns:DistanceMatrixProgress" />
+              <xsd:element minOccurs="0" maxOccurs="1" name="optimizationProgress" nillable="true" type="tns:OptimizationProgress" />
+            </xsd:sequence>
+            <xsd:attribute name="action" type="xsd:string" use="optional" />
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfClusterProgress">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ClusterProgress" nillable="true" type="tns:ClusterProgress" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfArrayOfClusterProgress">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ArrayOfClusterProgress" nillable="true" type="tns:ArrayOfClusterProgress" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="TerritoryProgress">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns:JobProgress">
+            <xsd:sequence>
+              <xsd:element minOccurs="0" maxOccurs="1" name="distanceMatrixProgress" nillable="true" type="tns:DistanceMatrixProgress" />
+            </xsd:sequence>
+            <xsd:attribute name="action" type="xsd:string" use="optional" />
+            <xsd:attribute name="optimizationProgress" type="xsd:int" use="required" />
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfTerritoryProgress">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="TerritoryProgress" nillable="true" type="tns:TerritoryProgress" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfArrayOfTerritoryProgress">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ArrayOfTerritoryProgress" nillable="true" type="tns:ArrayOfTerritoryProgress" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ZoneLoadingProgress">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns:JobProgress">
+            <xsd:sequence />
+            <xsd:attribute name="action" type="xsd:string" use="optional" />
+            <xsd:attribute name="optimizationProgress" type="xsd:int" use="required" />
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfZoneLoadingProgress">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ZoneLoadingProgress" nillable="true" type="tns:ZoneLoadingProgress" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfArrayOfZoneLoadingProgress">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ArrayOfZoneLoadingProgress" nillable="true" type="tns:ArrayOfZoneLoadingProgress" />
+        </xsd:sequence>
+      </xsd:complexType>
+    </xsd:schema>
+    <xsd:schema xmlns:ns2="http://wrappertypes.service.jabba.ptvag.com" xmlns:tns="http://xmap.xserver.ptvag.com" xmlns:ns1="http://value.core.jabba.ptvag.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ns0="http://common.xserver.ptvag.com" xmlns="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://xmap.xserver.ptvag.com">
+      <xsd:import namespace="http://wrappertypes.service.jabba.ptvag.com" />
+      <xsd:import namespace="http://exception.core.jabba.ptvag.com" />
+      <xsd:import namespace="http://common.xserver.ptvag.com" />
+      <xsd:import namespace="http://value.core.jabba.ptvag.com" />
+      <xsd:simpleType name="ImageFileFormat">
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="GIF" />
+          <xsd:enumeration value="JPG" />
+          <xsd:enumeration value="BMP" />
+          <xsd:enumeration value="WBMP" />
+          <xsd:enumeration value="PNG" />
+          <xsd:enumeration value="SMO" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:complexType name="ArrayOfImageFileFormat">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ImageFileFormat" type="tns:ImageFileFormat" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfArrayOfImageFileFormat">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ArrayOfImageFileFormat" nillable="true" type="tns:ArrayOfImageFileFormat" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="Map">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ns1:TransientVO">
+            <xsd:sequence>
+              <xsd:element minOccurs="0" maxOccurs="1" name="image" nillable="true" type="tns:Image" />
+              <xsd:element minOccurs="1" maxOccurs="1" name="wrappedObjects" nillable="true" type="tns:ArrayOfObjectInfos" />
+              <xsd:element minOccurs="0" maxOccurs="1" name="visibleSection" nillable="true" type="tns:VisibleSection" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfMap">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="Map" nillable="true" type="tns:Map" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfArrayOfMap">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ArrayOfMap" nillable="true" type="tns:ArrayOfMap" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="MapSection">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ns1:TransientVO">
+            <xsd:sequence>
+              <xsd:element minOccurs="0" maxOccurs="1" name="center" nillable="true" type="ns0:Point" />
+            </xsd:sequence>
+            <xsd:attribute name="scale" type="xsd:int" use="required" />
+            <xsd:attribute name="scrollHorizontal" type="xsd:int" use="required" />
+            <xsd:attribute name="scrollVertical" type="xsd:int" use="required" />
+            <xsd:attribute name="zoom" type="xsd:int" use="required" />
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfMapSection">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="MapSection" nillable="true" type="tns:MapSection" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfArrayOfMapSection">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ArrayOfMapSection" nillable="true" type="tns:ArrayOfMapSection" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ImageInfo">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ns1:TransientVO">
+            <xsd:sequence />
+            <xsd:attribute name="format" type="tns:ImageFileFormat" use="required" />
+            <xsd:attribute name="height" type="xsd:int" use="required" />
+            <xsd:attribute name="imageParameter" type="xsd:string" use="optional" />
+            <xsd:attribute name="width" type="xsd:int" use="required" />
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfImageInfo">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ImageInfo" nillable="true" type="tns:ImageInfo" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfArrayOfImageInfo">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ArrayOfImageInfo" nillable="true" type="tns:ArrayOfImageInfo" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="Layer" abstract="true">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ns1:TransientVO">
+            <xsd:sequence />
+            <xsd:attribute name="name" type="xsd:string" use="optional" />
+            <xsd:attribute name="visible" type="xsd:boolean" use="required" />
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfLayer">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="Layer" nillable="true" type="tns:Layer" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfArrayOfLayer">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ArrayOfLayer" nillable="true" type="tns:ArrayOfLayer" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="StaticLayer">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns:Layer">
+            <xsd:sequence />
+            <xsd:attribute name="category" type="xsd:int" use="required" />
+            <xsd:attribute name="detailLevel" type="xsd:int" use="required" />
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfStaticLayer">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="StaticLayer" nillable="true" type="tns:StaticLayer" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfArrayOfStaticLayer">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ArrayOfStaticLayer" nillable="true" type="tns:ArrayOfStaticLayer" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="CustomLayer">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns:Layer">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="wrappedBitmaps" nillable="true" type="tns:ArrayOfBitmaps" />
+              <xsd:element minOccurs="1" maxOccurs="1" name="wrappedLines" nillable="true" type="tns:ArrayOfLines" />
+              <xsd:element minOccurs="1" maxOccurs="1" name="wrappedTexts" nillable="true" type="tns:ArrayOfTexts" />
+            </xsd:sequence>
+            <xsd:attribute name="centerObjects" type="xsd:boolean" use="required" />
+            <xsd:attribute name="drawPriority" type="xsd:int" use="required" />
+            <xsd:attribute name="objectInfos" type="tns:ObjectInfoType" use="required" />
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfCustomLayer">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="CustomLayer" nillable="true" type="tns:CustomLayer" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfArrayOfCustomLayer">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ArrayOfCustomLayer" nillable="true" type="tns:ArrayOfCustomLayer" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="BasicBitmap" abstract="true">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ns1:TransientVO">
+            <xsd:sequence>
+              <xsd:element minOccurs="0" maxOccurs="1" name="position" nillable="true" type="ns0:Point" />
+            </xsd:sequence>
+            <xsd:attribute name="descr" type="xsd:string" use="optional" />
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfBasicBitmap">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="BasicBitmap" nillable="true" type="tns:BasicBitmap" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfArrayOfBasicBitmap">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ArrayOfBasicBitmap" nillable="true" type="tns:ArrayOfBasicBitmap" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="Texts">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ns1:TransientVO">
+            <xsd:sequence>
+              <xsd:element minOccurs="0" maxOccurs="1" name="options" nillable="true" type="tns:TextOptions" />
+              <xsd:element minOccurs="1" maxOccurs="1" name="wrappedTexts" nillable="true" type="tns:ArrayOfText" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfTexts">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="Texts" nillable="true" type="tns:Texts" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfArrayOfTexts">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ArrayOfTexts" nillable="true" type="tns:ArrayOfTexts" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="BitmapOptions">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ns1:TransientVO">
+            <xsd:sequence>
+              <xsd:element minOccurs="0" maxOccurs="1" name="referencePoint" nillable="true" type="ns0:PlainPoint" />
+              <xsd:element minOccurs="0" maxOccurs="1" name="transparencyColor" nillable="true" type="tns:Color" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfBitmapOptions">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="BitmapOptions" nillable="true" type="tns:BitmapOptions" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfArrayOfBitmapOptions">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ArrayOfBitmapOptions" nillable="true" type="tns:ArrayOfBitmapOptions" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="LinePartOptions">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns:BasicDrawingOptions">
+            <xsd:sequence />
+            <xsd:attribute name="width" type="xsd:int" use="required" />
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfLinePartOptions">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="LinePartOptions" nillable="true" type="tns:LinePartOptions" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfArrayOfLinePartOptions">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ArrayOfLinePartOptions" nillable="true" type="tns:ArrayOfLinePartOptions" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="Color">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ns1:TransientVO">
+            <xsd:sequence />
+            <xsd:attribute name="blue" type="xsd:int" use="required" />
+            <xsd:attribute name="green" type="xsd:int" use="required" />
+            <xsd:attribute name="red" type="xsd:int" use="required" />
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfColor">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="Color" nillable="true" type="tns:Color" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfArrayOfColor">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ArrayOfColor" nillable="true" type="tns:ArrayOfColor" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="BasicDrawingOptions">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ns1:TransientVO">
+            <xsd:sequence>
+              <xsd:element minOccurs="0" maxOccurs="1" name="color" nillable="true" type="tns:Color" />
+            </xsd:sequence>
+            <xsd:attribute name="visible" type="xsd:boolean" use="required" />
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfBasicDrawingOptions">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="BasicDrawingOptions" nillable="true" type="tns:BasicDrawingOptions" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfArrayOfBasicDrawingOptions">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ArrayOfBasicDrawingOptions" nillable="true" type="tns:ArrayOfBasicDrawingOptions" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="Text">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ns1:TransientVO">
+            <xsd:sequence>
+              <xsd:element minOccurs="0" maxOccurs="1" name="position" nillable="true" type="ns0:Point" />
+            </xsd:sequence>
+            <xsd:attribute name="text" type="xsd:string" use="optional" />
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfText">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="Text" nillable="true" type="tns:Text" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfArrayOfText">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ArrayOfText" nillable="true" type="tns:ArrayOfText" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="TextOptions">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ns1:TransientVO">
+            <xsd:sequence>
+              <xsd:element minOccurs="0" maxOccurs="1" name="bgColor" nillable="true" type="tns:Color" />
+              <xsd:element minOccurs="0" maxOccurs="1" name="font" nillable="true" type="tns:Font" />
+              <xsd:element minOccurs="0" maxOccurs="1" name="frameColor" nillable="true" type="tns:Color" />
+              <xsd:element minOccurs="0" maxOccurs="1" name="textColor" nillable="true" type="tns:Color" />
+            </xsd:sequence>
+            <xsd:attribute name="alignment" type="tns:TextAlignment" use="required" />
+            <xsd:attribute name="fillBg" type="xsd:boolean" use="required" />
+            <xsd:attribute name="pixelX" type="xsd:int" use="required" />
+            <xsd:attribute name="pixelY" type="xsd:int" use="required" />
+            <xsd:attribute name="relX" type="xsd:int" use="required" />
+            <xsd:attribute name="relY" type="xsd:int" use="required" />
+            <xsd:attribute name="showFrame" type="xsd:boolean" use="required" />
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfTextOptions">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="TextOptions" nillable="true" type="tns:TextOptions" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfArrayOfTextOptions">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ArrayOfTextOptions" nillable="true" type="tns:ArrayOfTextOptions" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="Bitmaps">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ns1:TransientVO">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="wrappedBitmaps" nillable="true" type="tns:ArrayOfBasicBitmap" />
+              <xsd:element minOccurs="0" maxOccurs="1" name="options" nillable="true" type="tns:BitmapOptions" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfBitmaps">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="Bitmaps" nillable="true" type="tns:Bitmaps" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfArrayOfBitmaps">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ArrayOfBitmaps" nillable="true" type="tns:ArrayOfBitmaps" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:simpleType name="TextAlignment">
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="TOP_LEFT" />
+          <xsd:enumeration value="TOP_MID" />
+          <xsd:enumeration value="TOP_RIGHT" />
+          <xsd:enumeration value="MID_LEFT" />
+          <xsd:enumeration value="CENTER" />
+          <xsd:enumeration value="MID_RIGHT" />
+          <xsd:enumeration value="BOTTOM_LEFT" />
+          <xsd:enumeration value="BOTTOM_MID" />
+          <xsd:enumeration value="BOTTOM_RIGHT" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:complexType name="ArrayOfTextAlignment">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="TextAlignment" type="tns:TextAlignment" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfArrayOfTextAlignment">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ArrayOfTextAlignment" nillable="true" type="tns:ArrayOfTextAlignment" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="Font">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ns1:TransientVO">
+            <xsd:sequence />
+            <xsd:attribute name="bold" type="xsd:boolean" use="required" />
+            <xsd:attribute name="frame" type="xsd:boolean" use="required" />
+            <xsd:attribute name="italic" type="xsd:boolean" use="required" />
+            <xsd:attribute name="name" type="xsd:string" use="optional" />
+            <xsd:attribute name="size" type="xsd:int" use="required" />
+            <xsd:attribute name="underline" type="xsd:boolean" use="required" />
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfFont">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="Font" nillable="true" type="tns:Font" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfArrayOfFont">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ArrayOfFont" nillable="true" type="tns:ArrayOfFont" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="Lines">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ns1:TransientVO">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="wrappedLines" nillable="true" type="ns0:ArrayOfLineString" />
+              <xsd:element minOccurs="0" maxOccurs="1" name="options" nillable="true" type="tns:LineOptions" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfLines">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="Lines" nillable="true" type="tns:Lines" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfArrayOfLines">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ArrayOfLines" nillable="true" type="tns:ArrayOfLines" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ObjectInfos">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ns1:TransientVO">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="wrappedObjects" nillable="true" type="tns:ArrayOfLayerObject" />
+            </xsd:sequence>
+            <xsd:attribute name="name" type="xsd:string" use="optional" />
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfObjectInfos">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ObjectInfos" nillable="true" type="tns:ObjectInfos" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfArrayOfObjectInfos">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ArrayOfObjectInfos" nillable="true" type="tns:ArrayOfObjectInfos" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="LayerObject">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ns1:TransientVO">
+            <xsd:sequence>
+              <xsd:element minOccurs="0" maxOccurs="1" name="geometry" nillable="true" type="tns:ObjectGeometry" />
+              <xsd:element minOccurs="0" maxOccurs="1" name="pixel" nillable="true" type="ns0:PlainPoint" />
+              <xsd:element minOccurs="0" maxOccurs="1" name="ref" nillable="true" type="ns0:Point" />
+            </xsd:sequence>
+            <xsd:attribute name="descr" type="xsd:string" use="optional" />
+            <xsd:attribute name="hiId" type="xsd:int" use="required" />
+            <xsd:attribute name="loId" type="xsd:int" use="required" />
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfLayerObject">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="LayerObject" nillable="true" type="tns:LayerObject" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfArrayOfLayerObject">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ArrayOfLayerObject" nillable="true" type="tns:ArrayOfLayerObject" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="Bitmap">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns:BasicBitmap">
+            <xsd:sequence />
+            <xsd:attribute name="name" type="xsd:string" use="optional" />
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfBitmap">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="Bitmap" nillable="true" type="tns:Bitmap" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfArrayOfBitmap">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ArrayOfBitmap" nillable="true" type="tns:ArrayOfBitmap" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="RawBitmap">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns:BasicBitmap">
+            <xsd:sequence />
+            <xsd:attribute name="rawBitmap" type="xsd:base64Binary" use="optional" />
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfRawBitmap">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="RawBitmap" nillable="true" type="tns:RawBitmap" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfArrayOfRawBitmap">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ArrayOfRawBitmap" nillable="true" type="tns:ArrayOfRawBitmap" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="MapParams">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ns1:TransientVO">
+            <xsd:sequence />
+            <xsd:attribute name="language" type="xsd:string" use="optional" />
+            <xsd:attribute name="referenceTime" type="xsd:string" use="optional" />
+            <xsd:attribute name="showScale" type="xsd:boolean" use="required" />
+            <xsd:attribute name="useMiles" type="xsd:boolean" use="required" />
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfMapParams">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="MapParams" nillable="true" type="tns:MapParams" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfArrayOfMapParams">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ArrayOfMapParams" nillable="true" type="tns:ArrayOfMapParams" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="SMOLayer">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns:Layer">
+            <xsd:sequence />
+            <xsd:attribute name="configuration" type="xsd:string" use="optional" />
+            <xsd:attribute name="objectInfos" type="tns:ObjectInfoType" use="required" />
+            <xsd:attribute name="smoData" type="xsd:base64Binary" use="optional" />
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfSMOLayer">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="SMOLayer" nillable="true" type="tns:SMOLayer" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfArrayOfSMOLayer">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ArrayOfSMOLayer" nillable="true" type="tns:ArrayOfSMOLayer" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="VisibleSection">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ns1:TransientVO">
+            <xsd:sequence>
+              <xsd:element minOccurs="0" maxOccurs="1" name="boundingBox" nillable="true" type="ns0:BoundingBox" />
+              <xsd:element minOccurs="0" maxOccurs="1" name="center" nillable="true" type="ns0:Point" />
+            </xsd:sequence>
+            <xsd:attribute name="scale" type="xsd:int" use="required" />
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfVisibleSection">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="VisibleSection" nillable="true" type="tns:VisibleSection" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfArrayOfVisibleSection">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ArrayOfVisibleSection" nillable="true" type="tns:ArrayOfVisibleSection" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="Image">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ns1:TransientVO">
+            <xsd:sequence />
+            <xsd:attribute name="rawImage" type="xsd:base64Binary" use="optional" />
+            <xsd:attribute name="url" type="xsd:string" use="optional" />
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfImage">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="Image" nillable="true" type="tns:Image" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfArrayOfImage">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ArrayOfImage" nillable="true" type="tns:ArrayOfImage" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:simpleType name="ErrorCodes">
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="NOERR" />
+          <xsd:enumeration value="INITINVALIDMAPPATH" />
+          <xsd:enumeration value="INITCONFIGERROR" />
+          <xsd:enumeration value="INITRENDERER" />
+          <xsd:enumeration value="INITREPATH" />
+          <xsd:enumeration value="INITIMAGEINSTANCE" />
+          <xsd:enumeration value="INIIMAGEMAPSERVER" />
+          <xsd:enumeration value="INITINVALIDBITMAPPATH" />
+          <xsd:enumeration value="INITINVALIDIMSPATH" />
+          <xsd:enumeration value="INITCREATEIMSPATH" />
+          <xsd:enumeration value="MODULEENV" />
+          <xsd:enumeration value="EMPTYPROFILE" />
+          <xsd:enumeration value="LICENSEACCESS" />
+          <xsd:enumeration value="INITINVALIDRLPATH" />
+          <xsd:enumeration value="INITINVALIDPOIPATH" />
+          <xsd:enumeration value="INITRLERROR" />
+          <xsd:enumeration value="INITPOIERROR" />
+          <xsd:enumeration value="INITINVALIDLINEPATH" />
+          <xsd:enumeration value="INITLABELER" />
+          <xsd:enumeration value="INITINVALIDTERRAINPATH" />
+          <xsd:enumeration value="INITLAYERERROR" />
+          <xsd:enumeration value="NOTLICENSED" />
+          <xsd:enumeration value="NOTLICENSEDPOI" />
+          <xsd:enumeration value="NOTLICENSEDTRAFFICINFO" />
+          <xsd:enumeration value="NOTLICENSEDRASTER" />
+          <xsd:enumeration value="NOTLICENSEDTERRAIN" />
+          <xsd:enumeration value="PRINTNORENDERCONFIG" />
+          <xsd:enumeration value="PRINTSIZE" />
+          <xsd:enumeration value="MAPSECTIONNULL" />
+          <xsd:enumeration value="MAPSECTIONCENTER" />
+          <xsd:enumeration value="IMAGEINFO" />
+          <xsd:enumeration value="LAYERUNKNOWNTYPE" />
+          <xsd:enumeration value="BITMAPNOLOAD" />
+          <xsd:enumeration value="BITMAPDECODE" />
+          <xsd:enumeration value="BITMAPDECREASE" />
+          <xsd:enumeration value="BITMAPINCREASE" />
+          <xsd:enumeration value="BITMAPENCODE" />
+          <xsd:enumeration value="BITMAPDRAW" />
+          <xsd:enumeration value="CUSTOMLAYERNAME" />
+          <xsd:enumeration value="BITMAPPOSITION" />
+          <xsd:enumeration value="BITMAPNODATA" />
+          <xsd:enumeration value="BITMAPRAWDATA" />
+          <xsd:enumeration value="BITMAPUNKNOWNTYPE" />
+          <xsd:enumeration value="INSERTPOI" />
+          <xsd:enumeration value="IMSNOTCONFIGURED" />
+          <xsd:enumeration value="SMOERROR" />
+          <xsd:enumeration value="GEODATASOURCEERROR" />
+          <xsd:enumeration value="SMOLAYERNAME" />
+          <xsd:enumeration value="LAYERNAMEDUPLICATE" />
+          <xsd:enumeration value="ENCODEBITMAP" />
+          <xsd:enumeration value="SMODATAEMPTY" />
+          <xsd:enumeration value="SMOWRITEIMS" />
+          <xsd:enumeration value="INVALIDSTATICLAYER" />
+          <xsd:enumeration value="INVALIDCATEGORY" />
+          <xsd:enumeration value="INVALIDSMOCONFIGURATION" />
+          <xsd:enumeration value="STATICLAYERERROR" />
+          <xsd:enumeration value="INVALIDIMAGEINFO" />
+          <xsd:enumeration value="FONTCREATEERROR" />
+          <xsd:enumeration value="INVALIDSMO" />
+          <xsd:enumeration value="LAYERDOESNOTSUPPORTOBJECTINFOS" />
+          <xsd:enumeration value="BITMAPURLNOLOAD" />
+          <xsd:enumeration value="INVALIDDRAWPRIORITY" />
+          <xsd:enumeration value="INVALIDOBJECTINFOS" />
+          <xsd:enumeration value="GEOMETRYLAYERNAME" />
+          <xsd:enumeration value="ERRORINLAYERGEOMETRY" />
+          <xsd:enumeration value="LAYERINSERT" />
+          <xsd:enumeration value="SMOBITMAP" />
+          <xsd:enumeration value="INVALIDRASTERLAYEROPERATION" />
+          <xsd:enumeration value="NOTLICENSEDROADEDITOR" />
+          <xsd:enumeration value="ROADEDITORLAYERELEMENT" />
+          <xsd:enumeration value="PROFILEDOESNOTEXIST" />
+          <xsd:enumeration value="SMOFORMATNOTSUPPORTED" />
+          <xsd:enumeration value="IDMAPPINGDATANOTPRESENT" />
+          <xsd:enumeration value="BIRDVIEWDISABLED" />
+          <xsd:enumeration value="INVALID_FEATURELAYER_CONFIGURATION" />
+          <xsd:enumeration value="INVALIDPROFILE" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:complexType name="ArrayOfErrorCodes">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ErrorCodes" type="tns:ErrorCodes" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfArrayOfErrorCodes">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ArrayOfErrorCodes" nillable="true" type="tns:ArrayOfErrorCodes" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="LineOptions">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ns1:TransientVO">
+            <xsd:sequence>
+              <xsd:element minOccurs="0" maxOccurs="1" name="arrows" nillable="true" type="tns:BasicDrawingOptions" />
+              <xsd:element minOccurs="0" maxOccurs="1" name="mainLine" nillable="true" type="tns:LinePartOptions" />
+              <xsd:element minOccurs="0" maxOccurs="1" name="sideLine" nillable="true" type="tns:LinePartOptions" />
+            </xsd:sequence>
+            <xsd:attribute name="showFlags" type="xsd:boolean" use="required" />
+            <xsd:attribute name="transparent" type="xsd:boolean" use="required" />
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfLineOptions">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="LineOptions" nillable="true" type="tns:LineOptions" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfArrayOfLineOptions">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ArrayOfLineOptions" nillable="true" type="tns:ArrayOfLineOptions" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="XMapException">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ns3:BusinessException">
+            <xsd:sequence />
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:element name="XMapException" type="tns:XMapException" />
+      <xsd:simpleType name="DrawPriorities">
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="PRIORMIN" />
+          <xsd:enumeration value="PRIORBRIDGE" />
+          <xsd:enumeration value="PRIORHEIGHT" />
+          <xsd:enumeration value="PRIOROTHER" />
+          <xsd:enumeration value="PRIORRAIL" />
+          <xsd:enumeration value="PRIORTUNNEL" />
+          <xsd:enumeration value="PRIORWATER" />
+          <xsd:enumeration value="PRIORBACKGROUND" />
+          <xsd:enumeration value="PRIORROUTE" />
+          <xsd:enumeration value="PRIORTOLL" />
+          <xsd:enumeration value="PRIORSCENICROUTE" />
+          <xsd:enumeration value="PRIORSTREET" />
+          <xsd:enumeration value="PRIORTOWNPOINTBASE" />
+          <xsd:enumeration value="PRIORONEWAYSIGN" />
+          <xsd:enumeration value="PRIORTOWNNAMEBASE" />
+          <xsd:enumeration value="PRIORTOWNNAME1" />
+          <xsd:enumeration value="PRIORTOWNNAME2" />
+          <xsd:enumeration value="PRIORTOWNNAME3" />
+          <xsd:enumeration value="PRIORTOWNNAME4" />
+          <xsd:enumeration value="PRIORTOWNNAME5" />
+          <xsd:enumeration value="PRIORTOWNNAME6" />
+          <xsd:enumeration value="PRIORTOWNNAME7" />
+          <xsd:enumeration value="PRIORTOWNNAME8" />
+          <xsd:enumeration value="PRIORTOWNNAME9" />
+          <xsd:enumeration value="PRIORTOWNNAME10" />
+          <xsd:enumeration value="PRIORTOWNNAME11" />
+          <xsd:enumeration value="PRIORTOWNNAME12" />
+          <xsd:enumeration value="PRIORTOWNNAME13" />
+          <xsd:enumeration value="PRIORTOWNNAME14" />
+          <xsd:enumeration value="PRIORSTREETSIGNSBASE" />
+          <xsd:enumeration value="PRIORSTREETSIGNSMOTORWAY" />
+          <xsd:enumeration value="PRIORSTREETSIGNSCOUNTRY" />
+          <xsd:enumeration value="PRIORSTREETNAMEBASE" />
+          <xsd:enumeration value="PRIORSTREETNAMEMOTORWAY" />
+          <xsd:enumeration value="PRIORSTREETNAMEEUROPE" />
+          <xsd:enumeration value="PRIORSTREETNAMENATIONAL" />
+          <xsd:enumeration value="PRIORSTREETNAMECOUNTRY" />
+          <xsd:enumeration value="PRIORSTREETNAMEREGION" />
+          <xsd:enumeration value="PRIORSTREETNAMETOWN" />
+          <xsd:enumeration value="PRIORSTREETNAMEZONE30" />
+          <xsd:enumeration value="PRIORSTREETNAMEPLAY" />
+          <xsd:enumeration value="PRIORADAKSIGN" />
+          <xsd:enumeration value="PRIORHOUSENUMBER" />
+          <xsd:enumeration value="PRIORTEXT" />
+          <xsd:enumeration value="PRIORPOIDEFAULT" />
+          <xsd:enumeration value="PRIORMAX" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:complexType name="ArrayOfDrawPriorities">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="DrawPriorities" type="tns:DrawPriorities" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfArrayOfDrawPriorities">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ArrayOfDrawPriorities" nillable="true" type="tns:ArrayOfDrawPriorities" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:simpleType name="ObjectInfoType">
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="NONE" />
+          <xsd:enumeration value="REFERENCEPOINT" />
+          <xsd:enumeration value="GEOMETRY" />
+          <xsd:enumeration value="GEOMETRYCLIPPED" />
+          <xsd:enumeration value="FULLGEOMETRY" />
+          <xsd:enumeration value="FULLGEOMETRYCLIPPED" />
+          <xsd:enumeration value="TILEGEOMETRY" />
+          <xsd:enumeration value="TILEGEOMETRYCLIPPED" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:complexType name="ArrayOfObjectInfoType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ObjectInfoType" type="tns:ObjectInfoType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfArrayOfObjectInfoType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ArrayOfObjectInfoType" nillable="true" type="tns:ArrayOfObjectInfoType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="StaticPoiLayer">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns:StaticLayer">
+            <xsd:sequence />
+            <xsd:attribute name="objectInfos" type="tns:ObjectInfoType" use="required" />
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfStaticPoiLayer">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="StaticPoiLayer" nillable="true" type="tns:StaticPoiLayer" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfArrayOfStaticPoiLayer">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ArrayOfStaticPoiLayer" nillable="true" type="tns:ArrayOfStaticPoiLayer" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="StaticRasterLayer">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns:StaticLayer">
+            <xsd:sequence />
+            <xsd:attribute name="drawPosition" type="tns:DrawPositions" use="required" />
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfStaticRasterLayer">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="StaticRasterLayer" nillable="true" type="tns:StaticRasterLayer" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfArrayOfStaticRasterLayer">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ArrayOfStaticRasterLayer" nillable="true" type="tns:ArrayOfStaticRasterLayer" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:simpleType name="DrawPositions">
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="BELOWROUTE" />
+          <xsd:enumeration value="BELOWSTREET" />
+          <xsd:enumeration value="BELOWNAMES" />
+          <xsd:enumeration value="ONTOP" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:complexType name="ArrayOfDrawPositions">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="DrawPositions" type="tns:DrawPositions" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfArrayOfDrawPositions">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ArrayOfDrawPositions" nillable="true" type="tns:ArrayOfDrawPositions" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ObjectGeometry">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ns1:TransientVO">
+            <xsd:sequence>
+              <xsd:element minOccurs="0" maxOccurs="1" name="pixelGeometry" nillable="true" type="ns0:PlainGeometryBase" />
+              <xsd:element minOccurs="0" maxOccurs="1" name="refGeometry" nillable="true" type="ns0:EncodedGeometry" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfObjectGeometry">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ObjectGeometry" nillable="true" type="tns:ObjectGeometry" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfArrayOfObjectGeometry">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ArrayOfObjectGeometry" nillable="true" type="tns:ArrayOfObjectGeometry" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="GeometryLayer">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns:Layer">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="wrappedGeometries" nillable="true" type="tns:ArrayOfGeometries" />
+            </xsd:sequence>
+            <xsd:attribute name="drawPriority" type="xsd:int" use="required" />
+            <xsd:attribute name="objectInfos" type="tns:ObjectInfoType" use="required" />
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfGeometryLayer">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="GeometryLayer" nillable="true" type="tns:GeometryLayer" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfArrayOfGeometryLayer">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ArrayOfGeometryLayer" nillable="true" type="tns:ArrayOfGeometryLayer" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="Geometries">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ns1:TransientVO">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="wrappedGeometries" nillable="true" type="tns:ArrayOfGeometry" />
+              <xsd:element minOccurs="1" maxOccurs="1" name="wrappedOptions" nillable="true" type="tns:ArrayOfGeometryOption" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfGeometries">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="Geometries" nillable="true" type="tns:Geometries" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfArrayOfGeometries">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ArrayOfGeometries" nillable="true" type="tns:ArrayOfGeometries" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="GeometryOption">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ns1:TransientVO">
+            <xsd:sequence />
+            <xsd:attribute name="option" type="tns:GeometryOptions" use="required" />
+            <xsd:attribute name="value" type="xsd:string" use="optional" />
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfGeometryOption">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="GeometryOption" nillable="true" type="tns:GeometryOption" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfArrayOfGeometryOption">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ArrayOfGeometryOption" nillable="true" type="tns:ArrayOfGeometryOption" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:simpleType name="GeometryOptions">
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="BITMAPNAME" />
+          <xsd:enumeration value="BITMAPTRANSPARENCYCOLOR" />
+          <xsd:enumeration value="TEXTINFO" />
+          <xsd:enumeration value="LINECOLOR" />
+          <xsd:enumeration value="LINEWIDTH" />
+          <xsd:enumeration value="LINEALPHA" />
+          <xsd:enumeration value="LINETYPE" />
+          <xsd:enumeration value="LINESTYLE" />
+          <xsd:enumeration value="LINEDISPLACEMENTFACTOR" />
+          <xsd:enumeration value="SIDELINECOLOR" />
+          <xsd:enumeration value="SIDELINEWIDTH" />
+          <xsd:enumeration value="SIDELINESTYLE" />
+          <xsd:enumeration value="SIDELINETYPE" />
+          <xsd:enumeration value="BORDERLINEWIDTH" />
+          <xsd:enumeration value="BORDERLINECOLOR" />
+          <xsd:enumeration value="BORDERLINESTYLE" />
+          <xsd:enumeration value="FILLCOLOR" />
+          <xsd:enumeration value="FILLALPHA" />
+          <xsd:enumeration value="HATCHSTYLE" />
+          <xsd:enumeration value="HATCHCOLOR" />
+          <xsd:enumeration value="ARROWCOLOR" />
+          <xsd:enumeration value="FONT" />
+          <xsd:enumeration value="FONTSIZE" />
+          <xsd:enumeration value="FONTCOLOR" />
+          <xsd:enumeration value="FONTSTYLE" />
+          <xsd:enumeration value="FONTBPP" />
+          <xsd:enumeration value="AUTOPLACEMENT" />
+          <xsd:enumeration value="AUTOCENTEROBJECTS" />
+          <xsd:enumeration value="LINESCALEFACTOR" />
+          <xsd:enumeration value="BORDERCOLOR" />
+          <xsd:enumeration value="BORDERWIDTH" />
+          <xsd:enumeration value="BORDERALPHA" />
+          <xsd:enumeration value="DRAWARROWS" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:complexType name="ArrayOfGeometryOptions">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="GeometryOptions" type="tns:GeometryOptions" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfArrayOfGeometryOptions">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ArrayOfGeometryOptions" nillable="true" type="tns:ArrayOfGeometryOptions" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="Geometry">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ns1:TransientVO">
+            <xsd:sequence>
+              <xsd:element minOccurs="0" maxOccurs="1" name="geometry" nillable="true" type="ns0:EncodedGeometry" />
+              <xsd:element minOccurs="0" maxOccurs="1" name="referencePoint" nillable="true" type="ns0:Point" />
+            </xsd:sequence>
+            <xsd:attribute name="description" type="xsd:string" use="optional" />
+            <xsd:attribute name="id" type="xsd:int" use="required" />
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfGeometry">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="Geometry" nillable="true" type="tns:Geometry" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfArrayOfGeometry">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ArrayOfGeometry" nillable="true" type="tns:ArrayOfGeometry" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="GeometryExt">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns:Geometry">
+            <xsd:sequence />
+            <xsd:attribute name="geometryString" type="xsd:string" use="optional" />
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfGeometryExt">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="GeometryExt" nillable="true" type="tns:GeometryExt" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfArrayOfGeometryExt">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ArrayOfGeometryExt" nillable="true" type="tns:ArrayOfGeometryExt" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="RoadEditorLayer">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns:Layer">
+            <xsd:sequence />
+            <xsd:attribute name="objectInfos" type="tns:ObjectInfoType" use="required" />
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfRoadEditorLayer">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="RoadEditorLayer" nillable="true" type="tns:RoadEditorLayer" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfArrayOfRoadEditorLayer">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ArrayOfRoadEditorLayer" nillable="true" type="tns:ArrayOfRoadEditorLayer" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="MapSectionRot">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns:MapSection">
+            <xsd:sequence />
+            <xsd:attribute name="angle" type="xsd:int" use="required" />
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfMapSectionRot">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="MapSectionRot" nillable="true" type="tns:MapSectionRot" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfArrayOfMapSectionRot">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ArrayOfMapSectionRot" nillable="true" type="tns:ArrayOfMapSectionRot" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="VisibleSectionRot">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns:VisibleSection">
+            <xsd:sequence>
+              <xsd:element minOccurs="0" maxOccurs="1" name="leftBottom" nillable="true" type="ns0:Point" />
+              <xsd:element minOccurs="0" maxOccurs="1" name="leftTop" nillable="true" type="ns0:Point" />
+              <xsd:element minOccurs="0" maxOccurs="1" name="rightBottom" nillable="true" type="ns0:Point" />
+              <xsd:element minOccurs="0" maxOccurs="1" name="rightTop" nillable="true" type="ns0:Point" />
+            </xsd:sequence>
+            <xsd:attribute name="angle" type="xsd:int" use="required" />
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfVisibleSectionRot">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="VisibleSectionRot" nillable="true" type="tns:VisibleSectionRot" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfArrayOfVisibleSectionRot">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ArrayOfVisibleSectionRot" nillable="true" type="tns:ArrayOfVisibleSectionRot" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="FeatureLayer">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns:Layer">
+            <xsd:sequence />
+            <xsd:attribute name="objectInfos" type="tns:ObjectInfoType" use="required" />
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfFeatureLayer">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="FeatureLayer" nillable="true" type="tns:FeatureLayer" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfArrayOfFeatureLayer">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ArrayOfFeatureLayer" nillable="true" type="tns:ArrayOfFeatureLayer" />
+        </xsd:sequence>
+      </xsd:complexType>
+    </xsd:schema>
+    <xsd:schema xmlns:ns2="http://xmap.xserver.ptvag.com" xmlns:soap11-enc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tns="http://types.xmap.xserver.ptvag.com" xmlns:ns1="http://xmap.xserver.ptvag.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ns0="http://types.xmap.xserver.ptvag.com" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:common="http://common.xserver.ptvag.com" xmlns:ns3="http://baseservices.service.jabba.ptvag.com" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" elementFormDefault="qualified" targetNamespace="http://types.xmap.xserver.ptvag.com">
+      <xsd:complexType name="renderMap">
+        <xsd:sequence>
+          <xsd:element name="MapSection_1" nillable="true" type="ns2:MapSection" />
+          <xsd:element name="MapParams_2" nillable="true" type="ns2:MapParams" />
+          <xsd:element name="ImageInfo_3" nillable="true" type="ns2:ImageInfo" />
+          <xsd:element name="ArrayOfLayer_4" nillable="true" type="ns2:ArrayOfLayer" />
+          <xsd:element name="boolean_5" type="xsd:boolean" />
+          <xsd:element name="CallerContext_6" nillable="true" type="ns3:CallerContext" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="renderMapResponse">
+        <xsd:sequence>
+          <xsd:element name="result" nillable="true" type="ns2:Map" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="renderMapBoundingBox">
+        <xsd:sequence>
+          <xsd:element name="BoundingBox_1" nillable="true" type="common:BoundingBox" />
+          <xsd:element name="MapParams_2" nillable="true" type="ns2:MapParams" />
+          <xsd:element name="ImageInfo_3" nillable="true" type="ns2:ImageInfo" />
+          <xsd:element name="ArrayOfLayer_4" nillable="true" type="ns2:ArrayOfLayer" />
+          <xsd:element name="boolean_5" type="xsd:boolean" />
+          <xsd:element name="CallerContext_6" nillable="true" type="ns3:CallerContext" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="renderMapBoundingBoxResponse">
+        <xsd:sequence>
+          <xsd:element name="result" nillable="true" type="ns2:Map" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="renderMapRot">
+        <xsd:sequence>
+          <xsd:element name="MapSectionRot_1" nillable="true" type="ns2:MapSectionRot" />
+          <xsd:element name="MapParams_2" nillable="true" type="ns2:MapParams" />
+          <xsd:element name="ImageInfo_3" nillable="true" type="ns2:ImageInfo" />
+          <xsd:element name="ArrayOfLayer_4" nillable="true" type="ns2:ArrayOfLayer" />
+          <xsd:element name="boolean_5" type="xsd:boolean" />
+          <xsd:element name="CallerContext_6" nillable="true" type="ns3:CallerContext" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="renderMapRotResponse">
+        <xsd:sequence>
+          <xsd:element name="result" nillable="true" type="ns2:Map" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="renderMap" type="tns:renderMap" />
+      <xsd:element name="renderMapResponse" type="tns:renderMapResponse" />
+      <xsd:element name="renderMapBoundingBox" type="tns:renderMapBoundingBox" />
+      <xsd:element name="renderMapBoundingBoxResponse" type="tns:renderMapBoundingBoxResponse" />
+      <xsd:element name="renderMapRot" type="tns:renderMapRot" />
+      <xsd:element name="renderMapRotResponse" type="tns:renderMapRotResponse" />
+    </xsd:schema>
+  </types>
+  <message name="XMapWS_renderMapResponse">
+    <part name="parameters" element="ns0:renderMapResponse" />
+  </message>
+  <message name="DatabaseException">
+    <part name="DatabaseException" element="ns3:DatabaseException" />
+  </message>
+  <message name="ConstraintViolationException">
+    <part name="ConstraintViolationException" element="ns3:ConstraintViolationException" />
+  </message>
+  <message name="XMapWS_renderMapRotResponse">
+    <part name="parameters" element="ns0:renderMapRotResponse" />
+  </message>
+  <message name="XMapWS_renderMapRot">
+    <part name="parameters" element="ns0:renderMapRot" />
+  </message>
+  <message name="SystemException">
+    <part name="SystemException" element="ns3:SystemException" />
+  </message>
+  <message name="TableNotFoundException">
+    <part name="TableNotFoundException" element="ns3:TableNotFoundException" />
+  </message>
+  <message name="XMapException">
+    <part name="XMapException" element="ns1:XMapException" />
+  </message>
+  <message name="XMapWS_renderMapBoundingBoxResponse">
+    <part name="parameters" element="ns0:renderMapBoundingBoxResponse" />
+  </message>
+  <message name="XMapWS_renderMapBoundingBox">
+    <part name="parameters" element="ns0:renderMapBoundingBox" />
+  </message>
+  <message name="XMapWS_renderMap">
+    <part name="parameters" element="ns0:renderMap" />
+  </message>
+  <message name="OptimisticRollbackException">
+    <part name="OptimisticRollbackException" element="ns3:OptimisticRollbackException" />
+  </message>
+  <message name="UnexpectedException">
+    <part name="UnexpectedException" element="ns3:UnexpectedException" />
+  </message>
+  <message name="XServiceException">
+    <part name="XServiceException" element="ns2:XServiceException" />
+  </message>
+  <portType name="XMapWS">
+    <operation name="renderMap">
+      <input message="tns:XMapWS_renderMap" />
+      <output message="tns:XMapWS_renderMapResponse" />
+      <fault name="XServiceException" message="tns:XServiceException" />
+      <fault name="TableNotFoundException" message="tns:TableNotFoundException" />
+      <fault name="UnexpectedException" message="tns:UnexpectedException" />
+      <fault name="SystemException" message="tns:SystemException" />
+      <fault name="OptimisticRollbackException" message="tns:OptimisticRollbackException" />
+      <fault name="ConstraintViolationException" message="tns:ConstraintViolationException" />
+      <fault name="DatabaseException" message="tns:DatabaseException" />
+      <fault name="XMapException" message="tns:XMapException" />
+    </operation>
+    <operation name="renderMapBoundingBox">
+      <input message="tns:XMapWS_renderMapBoundingBox" />
+      <output message="tns:XMapWS_renderMapBoundingBoxResponse" />
+      <fault name="XServiceException" message="tns:XServiceException" />
+      <fault name="TableNotFoundException" message="tns:TableNotFoundException" />
+      <fault name="UnexpectedException" message="tns:UnexpectedException" />
+      <fault name="SystemException" message="tns:SystemException" />
+      <fault name="OptimisticRollbackException" message="tns:OptimisticRollbackException" />
+      <fault name="ConstraintViolationException" message="tns:ConstraintViolationException" />
+      <fault name="DatabaseException" message="tns:DatabaseException" />
+      <fault name="XMapException" message="tns:XMapException" />
+    </operation>
+    <operation name="renderMapRot">
+      <input message="tns:XMapWS_renderMapRot" />
+      <output message="tns:XMapWS_renderMapRotResponse" />
+      <fault name="XServiceException" message="tns:XServiceException" />
+      <fault name="TableNotFoundException" message="tns:TableNotFoundException" />
+      <fault name="UnexpectedException" message="tns:UnexpectedException" />
+      <fault name="SystemException" message="tns:SystemException" />
+      <fault name="OptimisticRollbackException" message="tns:OptimisticRollbackException" />
+      <fault name="ConstraintViolationException" message="tns:ConstraintViolationException" />
+      <fault name="DatabaseException" message="tns:DatabaseException" />
+      <fault name="XMapException" message="tns:XMapException" />
+    </operation>
+  </portType>
+  <binding name="XMapWSBinding" type="tns:XMapWS">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <operation name="renderMap">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+      <fault name="XServiceException">
+        <soap:fault use="literal" name="XServiceException" namespace="" />
+      </fault>
+      <fault name="TableNotFoundException">
+        <soap:fault use="literal" name="TableNotFoundException" namespace="" />
+      </fault>
+      <fault name="UnexpectedException">
+        <soap:fault use="literal" name="UnexpectedException" namespace="" />
+      </fault>
+      <fault name="SystemException">
+        <soap:fault use="literal" name="SystemException" namespace="" />
+      </fault>
+      <fault name="OptimisticRollbackException">
+        <soap:fault use="literal" name="OptimisticRollbackException" namespace="" />
+      </fault>
+      <fault name="ConstraintViolationException">
+        <soap:fault use="literal" name="ConstraintViolationException" namespace="" />
+      </fault>
+      <fault name="DatabaseException">
+        <soap:fault use="literal" name="DatabaseException" namespace="" />
+      </fault>
+      <fault name="XMapException">
+        <soap:fault use="literal" name="XMapException" namespace="" />
+      </fault>
+    </operation>
+    <operation name="renderMapBoundingBox">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+      <fault name="XServiceException">
+        <soap:fault use="literal" name="XServiceException" namespace="" />
+      </fault>
+      <fault name="TableNotFoundException">
+        <soap:fault use="literal" name="TableNotFoundException" namespace="" />
+      </fault>
+      <fault name="UnexpectedException">
+        <soap:fault use="literal" name="UnexpectedException" namespace="" />
+      </fault>
+      <fault name="SystemException">
+        <soap:fault use="literal" name="SystemException" namespace="" />
+      </fault>
+      <fault name="OptimisticRollbackException">
+        <soap:fault use="literal" name="OptimisticRollbackException" namespace="" />
+      </fault>
+      <fault name="ConstraintViolationException">
+        <soap:fault use="literal" name="ConstraintViolationException" namespace="" />
+      </fault>
+      <fault name="DatabaseException">
+        <soap:fault use="literal" name="DatabaseException" namespace="" />
+      </fault>
+      <fault name="XMapException">
+        <soap:fault use="literal" name="XMapException" namespace="" />
+      </fault>
+    </operation>
+    <operation name="renderMapRot">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+      <fault name="XServiceException">
+        <soap:fault use="literal" name="XServiceException" namespace="" />
+      </fault>
+      <fault name="TableNotFoundException">
+        <soap:fault use="literal" name="TableNotFoundException" namespace="" />
+      </fault>
+      <fault name="UnexpectedException">
+        <soap:fault use="literal" name="UnexpectedException" namespace="" />
+      </fault>
+      <fault name="SystemException">
+        <soap:fault use="literal" name="SystemException" namespace="" />
+      </fault>
+      <fault name="OptimisticRollbackException">
+        <soap:fault use="literal" name="OptimisticRollbackException" namespace="" />
+      </fault>
+      <fault name="ConstraintViolationException">
+        <soap:fault use="literal" name="ConstraintViolationException" namespace="" />
+      </fault>
+      <fault name="DatabaseException">
+        <soap:fault use="literal" name="DatabaseException" namespace="" />
+      </fault>
+      <fault name="XMapException">
+        <soap:fault use="literal" name="XMapException" namespace="" />
+      </fault>
+    </operation>
+  </binding>
+  <service name="XMapWSService">
+    <port name="XMapWSPort" binding="tns:XMapWSBinding">
+      <soap:address location="https://api-eu-test.cloud.ptvgroup.com/xmap/ws/XMap" />
+    </port>
+  </service>
+</definitions>
