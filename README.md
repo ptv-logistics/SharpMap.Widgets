@@ -18,6 +18,7 @@ But the interactive Web- and Windows-Widgets of the SharpMap project are somehow
 ### The projects
 * SharpMap.Win - Windows (Forms) sample
 * SharpMap.Web - Browser sample
+* SharpMap.WinThin - Windows sample that uses the middle ware from the web project
 * SharpMap.Print - Sample for creating static images
 * SharpMap.Common - Shared code
 
@@ -33,8 +34,13 @@ So the layering-stack when using PTV xMapServer as base-map looks as follows:
 
 ![Client-Composition](/Doc/ClientComposition.png)
 
+### Architecture considerations
+
+![Render Architecture](/Doc/RenderArchitecture.png)
+
 ### ToDos
 * Enabling/disabling SharpMap layers for Web-Sample
+* Adding interaction to thin Windows-Client
 * Some dynamic filtering and styling
 * Better sample data sources
 * More docs
