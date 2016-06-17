@@ -38,7 +38,7 @@ So the layering-stack when using PTV xMapServer as base-map looks as follows:
 
 A crucial part for UI applications is the decision about the basic architecture. There are two categories of UI-applications:
 
-* 2-tier, where the client directly accesses the data inside the databse using SQL. It could even be possible that the database is not  hosted on an external server, but an embedded (MS Access, SQLite) database, or just a plain .csv file. In this case we speak of a 1-tier applicatin.
+* 2-tier, where the client directly accesses the data inside the database using SQL. It could even be possible that the database is not  hosted on an external server, but an embedded (MS Access, SQLite) database, or just a plain .csv file. In this case we speak of a 1-tier applicatin.
 * 3-tier, where the client is only a thin application that consumes web services. A middleware supplies the client with the data via HTTP (SOAP, REST) interfaces. Web-clients usually use this architecture, but it's also possible to build a thin Windows (Forms, WPF) client that doesn't access the database directly, but only via a web interface.
 
 The difference is very important with aspect on rendering performance. The renderer reads the geometry and attribute data from the database. This requires a high bandwidth between renderer and database server. If the client doesn't have this high-bandwidth connection to the database it's recommended to use a middleware, so only the rendered images have to be transferred to the client.
@@ -47,7 +47,7 @@ The difference is very important with aspect on rendering performance. The rende
 
 ### ToDos
 * Enabling/disabling SharpMap layers for Web-Sample
-* Adding interaction to thin Windows-Client
+* Add interaction to thin Windows-Client
 * Some dynamic filtering and styling
 * Better sample data sources
 * More docs
