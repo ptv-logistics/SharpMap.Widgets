@@ -32,11 +32,11 @@ The basic idea is to compose (or "mesh-up") imagery and vector data on the clien
 
 So the layering-stack when using PTV xMapServer as base-map looks as follows:
 
-<a href="url"><img src="/Doc//ClientComposition.png" align="center" width="400" ></a>
+<a href="url"><img src="/Doc//ClientComposition.png" align="center" width="600" ></a>
 
 ### Architecture considerations
 
-<a href="url"><img src="/Doc/RenderArchitecture.png" align="center" width="400" ></a>
+<a href="url"><img src="/Doc/RenderArchitecture.png" align="center" width="600" ></a>
 
 ### ToDos
 * Enabling/disabling SharpMap layers for Web-Sample
