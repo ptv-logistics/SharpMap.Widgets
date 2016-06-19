@@ -7,6 +7,7 @@ using System.Globalization;
 using System.IO;
 using System.Web;
 using Widgets;
+using System.Linq;
 
 namespace SpatialTutorial
 {
@@ -24,6 +25,7 @@ namespace SpatialTutorial
             //Parse request parameters
             var bbox = context.Request.Params["bbox"].Split(',');
             var envelope = new Envelope(c(bbox[0]), c(bbox[2]), c(bbox[1]), c(bbox[3]));
+            var layers = context.Request.Params["layers"].Split(',');
             if (!int.TryParse(context.Request.Params["width"], out width))
                 throw (new ArgumentException("Invalid parameter"));
             if (!int.TryParse(context.Request.Params["height"], out height))
@@ -33,9 +35,15 @@ namespace SpatialTutorial
             using (var sharpMap = new SharpMap.Map(new Size(width, height)) { BackColor = Color.Transparent })
             {
                 // add the layer to the map
-                foreach (var l in SampleLayers.Layers.GetLayers(RenderingLayer.Foreground, sharpMap.PixelSize))
-                    sharpMap.Layers.Add(l);
+                var bgLayers = from l in SampleLayers.Layers.GetLayers(RenderingLayer.Foreground, sharpMap.PixelSize) select l;
+                var requestLayers = (from l in bgLayers where layers.Contains(l.LayerName) select l).ToList();
 
+                if (requestLayers.Count == 0)
+                    return;
+
+                foreach (var l in requestLayers)
+                    sharpMap.Layers.Add(l);
+                
                 // zoom to the requested envelope 
                 sharpMap.ZoomToBox(envelope);
 

@@ -27,8 +27,15 @@
     <script src="http://cdn.leafletjs.com/leaflet/v1.0.0-rc.1/leaflet.js"></script>
     <script src="./NonTiledLayer.js"></script>
     <script src="./NonTiledLayer.WMS.js"></script>
+    <script src="./VirtualLayer.js"></script>
     <script src="./token.js"></script>
     <script>
+        // needed to identify the latest pick request
+        var tick = 0;
+
+        // the current picked feature
+        var pickedFeature;
+
         // initialize leaflet
         var map = new L.Map('map',
         {
@@ -49,57 +56,80 @@
             "PTV classic": getXMap1Layers(xMapUrl + '/WMS/WMS', "", xMapAttribution),
             "PTV sandbox": getXMap1Layers(xMapUrl + '/WMS/WMS', "sandbox", xMapAttribution),
             "PTV silkysand": getXMap1Layers(xMapUrl + '/WMS/WMS', "silkysand", xMapAttribution),
-            "PTV silkysand": getXMap1Layers(xMapUrl + '/WMS/WMS', "gravelpit", xMapAttribution).addTo(map)
+            "PTV gravelpit": getXMap1Layers(xMapUrl + '/WMS/WMS', "gravelpit", xMapAttribution).addTo(map)
         };
 
-        // add dymamic tile layer
-        var myTileLayerUrl = 'SharpMapTilesHandler.ashx?x={x}&y={y}&z={z}',
-	    myTileLayer = new L.TileLayer(myTileLayerUrl, {
-	        maxZoom: 20, minZoom: 0, zIndex: 100
-	    }).addTo(map);
+        $.get("LayerInfoHandler.ashx", function (data, status) {
+            initializeShapMapLayers(data);
+        });
 
-        // add dymamic overlay layer
-        var myOverlayLayer = new L.NonTiledLayer.WMS('SharpMapOverlayHandler.ashx', {
-            zIndex: 1,
-            opacity: 1.0,
-            layers: '',
-            format: 'image/png',
-            transparent: true
-        }).addTo(map);
+        // initializes the sharpmap layers
+        function initializeShapMapLayers(layers) {
 
-        // add controls
-        L.control.layers(baseLayers, {"Areas": myTileLayer, "POIs": myOverlayLayer}, { autoZIndex: false }).addTo(map);
-        L.control.scale().addTo(map);
+            // add dymamic tile layer
+            var myTileLayerUrl = 'SharpMapTilesHandler.ashx?x={x}&y={y}&z={z}&layers=',
+            sharpMapTileLayer = new L.TileLayer(myTileLayerUrl, {
+                maxZoom: 20, minZoom: 0, zIndex: 100
+            });
 
-        // set cursor always interactive
-        $('.leaflet-container').css('cursor', 'pointer');
+            // add dynamic overlay layer
+            var sharpMapOverlayLayer = new L.NonTiledLayer.WMS('SharpMapOverlayHandler.ashx', {
+                zIndex: 1,
+                opacity: 1.0,
+                layers: '',
+                format: 'image/png',
+                transparent: true
+            });
 
-        // needed to identify the latest reuqest
-        var tick = 0;
+            // append the virtualLayers
+            sharpMapTileLayer.virtualLayers = {};
+            sharpMapOverlayLayer.virtualLayers = {};
 
-        // add click handler
-        map.on('click', function onMapClick(e) {
-            $.ajax({
-                url: "SharpMapPickHandler.ashx?lat=" + e.latlng.lat + "&lng=" + e.latlng.lng + "&z=" + map.getZoom(),
-                type: "GET",
-                success: function (data, status, xhr) {
-                    displayResult(data, e.latlng, ++tick);
+            var virtualLeafletLayers = {};
+            for (var i = 0; i < layers.length; i++) {
+                var layer = layers[i];
+                var hostLayer = (layer.LayerCategory == 0) ? sharpMapOverlayLayer : sharpMapTileLayer;
+                var l = new L.VirtualLayer(hostLayer, layer.Name).addTo(map);
+                virtualLeafletLayers[layer.Name] = l;
+            }
+
+            // add controls
+            L.control.layers(baseLayers, virtualLeafletLayers, { autoZIndex: false }).addTo(map);
+            L.control.scale().addTo(map);
+
+            // set cursor always interactive
+            $('.leaflet-container').css('cursor', 'pointer');
+
+            // add click handler
+            map.on('click', function onMapClick(e) {
+                var visibileLayers = [];
+                for (var l in virtualLeafletLayers) {
+                    if (virtualLeafletLayers[l].isVisible())
+                        visibileLayers.push(l);
+                };
+
+                $.ajax({
+                    url: "SharpMapPickHandler.ashx?lat=" + e.latlng.lat + "&lng=" + e.latlng.lng +
+                        "&z=" + map.getZoom() + '&layers=' + visibileLayers.join(','),
+                    type: "GET",
+                    success: function (data, status, xhr) {
+                        displayResult(data, e.latlng, ++tick);
+                    }
+                });
+            });
+
+            map.on('popupclose', function (e) {
+                // remove old selection (deferred)
+                if (pickedFeature) {
+                    setTimeout(function () {
+                        map.removeLayer(pickedFeature);
+                        pickedFeature = null;
+                    }, 0);
                 }
             });
-        });
+        }
 
-        var pickedFeature;
-
-        map.on('popupclose', function (e) {
-            // remove old selection (deferred)
-            if (pickedFeature) {
-                setTimeout(function () {
-                    map.removeLayer(pickedFeature);
-                    pickedFeature = null;
-                }, 0);
-            }
-        });
-
+        // display the result of a selection
         function displayResult(pickedJson, latlng, t) {
 
             // obsolete result
@@ -118,7 +148,7 @@
 
             // create a new layer from the json
             pickedFeature = L.geoJson([pickedJson], {
-                style: function (feature) {  
+                style: function (feature) {
                     return {
                         weight: 4, color: "#222", opacity: 1,
                         fillColor: "#fff", fillOpacity: 0.5

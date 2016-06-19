@@ -33,9 +33,13 @@ namespace SpatialTutorial
                 if (!double.TryParse(context.Request.Params["z"], NumberStyles.Float, CultureInfo.InvariantCulture, out z))
                     throw (new ArgumentException("Invalid parameter"));
 
+                var layers = context.Request.Params["layers"].Split(',');
+
                 context.Response.ContentType = "text/json";
 
-                var hitObject = HitTester.HitTest(SampleLayers.Layers, lat, lng, z); 
+                var requestLayers = (from l in SampleLayers.Layers where layers.Contains(l.Name) select l).ToList();
+
+                var hitObject = HitTester.HitTest(requestLayers, lat, lng, z); 
                 if(hitObject!=null)
                     WriteRow(hitObject, context.Response);
                 else

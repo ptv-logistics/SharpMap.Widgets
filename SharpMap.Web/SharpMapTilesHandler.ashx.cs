@@ -6,6 +6,7 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Web;
 using Widgets;
+using System.Linq;
 
 namespace SpatialTutorial
 {
@@ -26,6 +27,8 @@ namespace SpatialTutorial
             if (!int.TryParse(context.Request.Params["z"], out z))
                 throw (new ArgumentException("Invalid parameter"));
 
+            var layers = context.Request.Params["layers"].Split(',');
+
             // create a transparent sharpmap map with a size of 256x256
             using (var sharpMap = new SharpMap.Map(new Size(256, 256)) { BackColor = Color.Transparent })
             {
@@ -33,7 +36,13 @@ namespace SpatialTutorial
                 sharpMap.ZoomToBox(TileToWebMercatorAtZoom(x, y, z));
 
                 // add the layer to the map
-                foreach (var l in SampleLayers.Layers.GetLayers(RenderingLayer.Background, sharpMap.PixelSize))
+                var bgLayers = from l in SampleLayers.Layers.GetLayers(RenderingLayer.Background, sharpMap.PixelSize) select l;
+                var requestLayers = (from l in bgLayers where layers.Contains(l.LayerName) select l).ToList();
+
+                if (requestLayers.Count == 0)
+                    return;
+
+                foreach(var l in requestLayers)
                     sharpMap.Layers.Add(l);
 
                 // render the map image

@@ -134,6 +134,7 @@
     <Content Include="Data\Poi\Bitmaps\WORK.bmp" />
     <Content Include="Data\Poi\p_fd7.bmp" />
     <Content Include="Data\Poi\p_fd7.mdb" />
+    <Content Include="VirtualLayer.js" />
     <Content Include="packages.config" />
     <Content Include="SharpMapTilesHandler.ashx" />
     <Content Include="Data\Shape\world_countries_boundary_file_world_2002.dbf" />
@@ -143,6 +144,7 @@
     <Content Include="Data\Poi\p_fd7.ini" />
     <Content Include="SharpMapOverlayHandler.ashx" />
     <Content Include="SharpMapPickHandler.ashx" />
+    <Content Include="LayerInfoHandler.ashx" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -158,6 +160,9 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="LayerInfoHandler.ashx.cs">
+      <DependentUpon>LayerInfoHandler.ashx</DependentUpon>
+    </Compile>
     <Compile Include="SharpMapPickHandler.ashx.cs">
       <DependentUpon>SharpMapPickHandler.ashx</DependentUpon>
     </Compile>

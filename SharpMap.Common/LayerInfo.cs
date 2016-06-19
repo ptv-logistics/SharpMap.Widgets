@@ -1,4 +1,5 @@
-﻿using SharpMap.Layers;
+﻿using Newtonsoft.Json;
+using SharpMap.Layers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,12 +25,15 @@ namespace SharpMap.Common
 
         public LayerCategory LayerCategory { get; set; }
 
-        public bool Visible { get; set; }
-
         public string[] Themes { get; set; }
 
+        [JsonIgnore]
+        public bool Visible { get; set; }
+
+        [JsonIgnore]
         public string CurrentTheme { get; set; }
 
+        [JsonIgnore]
         public Func<string, double, ILayer> LayerFactory { get; set; }
     }
 
