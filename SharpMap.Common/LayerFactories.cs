@@ -18,9 +18,16 @@ namespace Widgets
 {
     public static class SampleLayers
     {
+        /// <summary>
+        /// Our collection of sample layers.
+        /// </summary>
         public static IEnumerable<LayerInfo> Layers;
 
+        /// <summary>
+        /// The donut-provider represents an in-memory collection of computed shapes.
+        /// </summary>
         private static SharpMap.Data.Providers.GeometryFeatureProvider donutProvider;
+
         static SampleLayers()
         {
             // we createa a dummy data source that contains computed in-memory shapes
@@ -105,17 +112,19 @@ namespace Widgets
         /// <returns> The collection of layers </returns>
         public static IEnumerable<LayerInfo> GetPOIs()
         {
-            // insert address monitor layers
-            var rootPath = System.AppDomain.CurrentDomain.BaseDirectory + "Data\\Poi";
+            // find all poi-databases
+            var rootPath = AppDomain.CurrentDomain.BaseDirectory + "Data\\Poi";
             var bitmapPath = rootPath + "\\Bitmaps";
-            string[] poiFiles = System.IO.Directory.GetFiles(rootPath, "*.mdb");
+            string[] poiFiles = Directory.GetFiles(rootPath, "*.mdb");
+
             foreach (string poiFile in poiFiles)
             {
                 yield return new LayerInfo
                 {
-                    Name = System.IO.Path.GetFileNameWithoutExtension(poiFile),
+                    Name = Path.GetFileNameWithoutExtension(poiFile),
                     LayerCategory = LayerCategory.Point,
                     Visible = true,
+                    Caption = AMLayerFactory.GetVisibleName(poiFile),
                     LayerFactory = (theme, pixelSize) =>
                     {
                         var layer = AMLayerFactory.CreateLayer(poiFile, bitmapPath);
@@ -157,7 +166,7 @@ namespace Widgets
                 fillColor = ColorBlend.ThreeColors(Color.Green, Color.Yellow, Color.Red).GetColor(scale);
 
             // make fill color alpha-transparent
-            fillColor = Color.FromArgb(180, fillColor.R, fillColor.G, fillColor.B);
+            fillColor = Color.FromArgb(128, fillColor.R, fillColor.G, fillColor.B);
 
             // set the border width depending on the map scale
             var pen = new Pen(Brushes.Black, (int)(50.0 / pixelSize)) { LineJoin = System.Drawing.Drawing2D.LineJoin.Round };

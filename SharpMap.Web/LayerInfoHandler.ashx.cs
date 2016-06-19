@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -9,11 +10,11 @@ namespace SharpMap.Web
     /// <summary>
     /// Summary description for MapInfoHandler
     /// </summary>
-    public class MapInfoHandler : IHttpHandler
+    public class LayerInfoHandler : IHttpHandler
     {
         public void ProcessRequest(HttpContext context)
         {
-            var x = Newtonsoft.Json.JsonConvert.SerializeObject(SampleLayers.Layers);
+            var x = JsonConvert.SerializeObject(SampleLayers.Layers);
 
             context.Response.ContentType = "application/json";
             context.Response.Write(x);

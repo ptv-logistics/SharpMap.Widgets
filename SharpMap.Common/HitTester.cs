@@ -6,13 +6,21 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Tools;
-using Widgets;
 
 namespace SharpMap.Common
 {
     public class HitTester
     {
-        public static FeatureDataRow HitTest(IEnumerable<LayerInfo> layers, double lat, double lon, double z)
+        /// <summary>
+        /// Rerturns the object that is hit by a coordinate.
+        /// </summary>
+        /// <param name="layers">The collection of layers to hit-test.</param>
+        /// <param name="lat">The latitude.</param>
+        /// <param name="lon">The longitude.</param>
+        /// <param name="z">The zoom level.</param>
+        /// <returns>The feature data for the object.</returns>
+        public static FeatureDataRow HitTest(IEnumerable<LayerInfo> layers,
+            double lat, double lon, double z)
         {
             // we assume the half size for symbols is 8 pixel
             var size2 = 8;
@@ -93,11 +101,6 @@ namespace SharpMap.Common
             // nothing was hit
             return null;
 
-        }
-
-        public static object HitTest(object sampleInfo, double y, double x, double currentZoom)
-        {
-            throw new NotImplementedException();
         }
     }
 }

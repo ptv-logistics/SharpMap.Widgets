@@ -24,7 +24,7 @@ namespace SharpMap.WinThin
             var ptvToGoogle = 6378137.0 / 6371000.0;
 
             var requestString = string.Format(CultureInfo.InvariantCulture,
-                "{0}?service=WMS&request=GetMap&version=1.1.1&layers=&styles=format=image/png&transparent=true&srs=EPSG:3857&bbox={1},{2},{3},{4}&width={5}&height={6}",
+                "{0}&service=WMS&request=GetMap&version=1.1.1&layers=&styles=format=image/png&transparent=true&srs=EPSG:3857&bbox={1},{2},{3},{4}&width={5}&height={6}",
                 baseUrl, left* ptvToGoogle, top* ptvToGoogle, right* ptvToGoogle, bottom* ptvToGoogle, width, height);
 
             var request = WebRequest.Create(requestString);

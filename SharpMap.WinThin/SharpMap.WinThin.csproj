@@ -149,6 +149,12 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SharpMap.Common\SharpMap.Common.csproj">
+      <Project>{17ba9a7c-f88b-4aa4-8304-92c8a4048ad4}</Project>
+      <Name>SharpMap.Common</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

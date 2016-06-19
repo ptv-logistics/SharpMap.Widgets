@@ -106,7 +106,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AddressMonitor\AMLayerFactory.cs" />
-    <Compile Include="AddressMonitor\AMLocator.cs" />
     <Compile Include="AddressMonitor\AMProvider.cs" />
     <Compile Include="AddressMonitor\AMStyle.cs" />
     <Compile Include="AddressMonitor\BitmapCache.cs" />

@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Drawing;
 
 namespace Ptv.Controls.Map
@@ -9,7 +7,7 @@ namespace Ptv.Controls.Map
     {
         private Dictionary<string, Bitmap> m_Bitmaps = new Dictionary<string, Bitmap>();
 
-        public void AddBitmap(string name, string filename, System.Drawing.Color transparentColor)
+        public void AddBitmap(string name, string filename, Color transparentColor)
         {
             name = name.ToUpper();
 

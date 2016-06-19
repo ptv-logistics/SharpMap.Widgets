@@ -1,12 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Text;
-using System.Data.OleDb;
-using SharpMap.Data.Providers;
-using SharpMap.Data;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
+using SharpMap.Data;
+using SharpMap.Data.Providers;
+using System;
+using System.Collections.ObjectModel;
+using System.Data;
+using System.Data.OleDb;
 using Tools;
 
 namespace Ptv.Controls.Map.AddressMonitor
@@ -103,13 +102,13 @@ namespace Ptv.Controls.Map.AddressMonitor
         public int GetFeatureCount()
         {
             int count = 0;
-            using (System.Data.OleDb.OleDbConnection conn = new OleDbConnection(_ConnectionString))
+            using (var conn = new OleDbConnection(_ConnectionString))
             {
                 string strSQL = "Select Count(*) FROM " + this.Table;
-                if (!String.IsNullOrEmpty(_defintionQuery)) //If a definition query has been specified, add this as a filter on the query
+                if (!string.IsNullOrEmpty(_defintionQuery)) //If a definition query has been specified, add this as a filter on the query
                     strSQL += " WHERE " + _defintionQuery;
 
-                using (System.Data.OleDb.OleDbCommand command = new OleDbCommand(strSQL, conn))
+                using (var command = new OleDbCommand(strSQL, conn))
                 {
                     conn.Open();
                     count = (int)command.ExecuteScalar();
@@ -137,29 +136,29 @@ namespace Ptv.Controls.Map.AddressMonitor
         /// <returns>datarow</returns>
         public FeatureDataRow GetFeature(uint RowID)
         {
-            using (System.Data.OleDb.OleDbConnection conn = new OleDbConnection(_ConnectionString))
+            using (var conn = new OleDbConnection(_ConnectionString))
             {
                 string strSQL = "select * from " + this.Table + " WHERE " + this.ObjectIdColumn + "=" + RowID.ToString();
 
-                using (System.Data.OleDb.OleDbDataAdapter adapter = new OleDbDataAdapter(strSQL, conn))
+                using (var adapter = new OleDbDataAdapter(strSQL, conn))
                 {
                     conn.Open();
-                    System.Data.DataSet ds = new System.Data.DataSet();
+                    var ds = new DataSet();
                     adapter.Fill(ds);
                     conn.Close();
                     if (ds.Tables.Count > 0)
                     {
-                        FeatureDataTable fdt = new FeatureDataTable(ds.Tables[0]);
-                        foreach (System.Data.DataColumn col in ds.Tables[0].Columns)
+                        var fdt = new FeatureDataTable(ds.Tables[0]);
+                        foreach (DataColumn col in ds.Tables[0].Columns)
                             fdt.Columns.Add(col.ColumnName, col.DataType, col.Expression);
                         if (ds.Tables[0].Rows.Count > 0)
                         {
-                            System.Data.DataRow dr = ds.Tables[0].Rows[0];
-                            SharpMap.Data.FeatureDataRow fdr = fdt.NewRow();
-                            foreach (System.Data.DataColumn col in ds.Tables[0].Columns)
+                            DataRow dr = ds.Tables[0].Rows[0];
+                            var fdr = fdt.NewRow();
+                            foreach (DataColumn col in ds.Tables[0].Columns)
                                 fdr[col.ColumnName] = dr[col];
                             if (dr[this.XColumn] != DBNull.Value && dr[this.YColumn] != DBNull.Value)
-                                fdr.Geometry = new Point(System.Convert.ToDouble(dr[this.XColumn]), System.Convert.ToDouble(dr[this.YColumn]));
+                                fdr.Geometry = new Point(Convert.ToDouble(dr[this.XColumn]), Convert.ToDouble(dr[this.YColumn]));
                             return fdr;
                         }
                         else
@@ -251,8 +250,8 @@ namespace Ptv.Controls.Map.AddressMonitor
                 if (!String.IsNullOrEmpty(_defintionQuery))
                     strSQL += _defintionQuery + " AND ";
                 //Limit to the points within the boundingbox
-                strSQL += this.XColumn + " BETWEEN " + System.Convert.ToInt32(bbox.Left()).ToString() + " AND " + System.Convert.ToInt32(bbox.Right()).ToString() + " AND " +
-                    this.YColumn + " BETWEEN " + System.Convert.ToInt32(bbox.Bottom()).ToString() + " AND " + System.Convert.ToInt32(bbox.Top()).ToString();
+                strSQL += this.XColumn + " BETWEEN " + Convert.ToInt32(bbox.Left()).ToString() + " AND " + Convert.ToInt32(bbox.Right()).ToString() + " AND " +
+                    this.YColumn + " BETWEEN " + Convert.ToInt32(bbox.Bottom()).ToString() + " AND " + Convert.ToInt32(bbox.Top()).ToString();
 
                 using (var command = new OleDbCommand(strSQL, conn))
                 {
@@ -263,7 +262,7 @@ namespace Ptv.Controls.Map.AddressMonitor
                         {
                             if (dr[0] != DBNull.Value && dr[1] != DBNull.Value)
                                 result.Add(new Point(GeoTools.SphereMercator2Wgs(
-                                    new Coordinate(System.Convert.ToDouble(dr[0]), System.Convert.ToDouble(dr[1])), true)));
+                                    new Coordinate(Convert.ToDouble(dr[0]), Convert.ToDouble(dr[1])), true)));
                         }
                     }
                     conn.Close();
@@ -277,19 +276,19 @@ namespace Ptv.Controls.Map.AddressMonitor
         {
             bbox = GeoTools.Wgs2SphereMercator(bbox, true);
             Collection<uint> objectlist = new Collection<uint>();
-            using (System.Data.OleDb.OleDbConnection conn = new OleDbConnection(_ConnectionString))
+            using (var conn = new OleDbConnection(_ConnectionString))
             {
                 string strSQL = "Select " + this.ObjectIdColumn + " FROM " + this.Table + " WHERE ";
                 if (!String.IsNullOrEmpty(_defintionQuery))
                     strSQL += _defintionQuery + " AND ";
                 //Limit to the points within the boundingbox
-                strSQL += this.XColumn + " BETWEEN " + System.Convert.ToInt32(bbox.Left()).ToString() + " AND " + System.Convert.ToInt32(bbox.Right()).ToString() + " AND " + this.YColumn +
-                    " BETWEEN " + System.Convert.ToInt32(bbox.Bottom()).ToString() + " AND " + System.Convert.ToInt32(bbox.Top()).ToString();
+                strSQL += this.XColumn + " BETWEEN " + Convert.ToInt32(bbox.Left()).ToString() + " AND " + Convert.ToInt32(bbox.Right()).ToString() + " AND " + this.YColumn +
+                    " BETWEEN " + Convert.ToInt32(bbox.Bottom()).ToString() + " AND " + Convert.ToInt32(bbox.Top()).ToString();
 
-                using (System.Data.OleDb.OleDbCommand command = new OleDbCommand(strSQL, conn))
+                using (var command = new OleDbCommand(strSQL, conn))
                 {
                     conn.Open();
-                    using (System.Data.OleDb.OleDbDataReader dr = command.ExecuteReader())
+                    using (var dr = command.ExecuteReader())
                     {
                         while (dr.Read())
                             if (dr[0] != DBNull.Value)
@@ -303,7 +302,7 @@ namespace Ptv.Controls.Map.AddressMonitor
 
         IGeometry IProvider.GetGeometryByID(uint oid)
         {
-            using (System.Data.OleDb.OleDbConnection conn = new OleDbConnection(_ConnectionString))
+            using (var conn = new OleDbConnection(_ConnectionString))
             {
                 string strSQL = "Select " + this.XColumn + ", " + this.YColumn + " FROM " + this.Table + " WHERE " + this.ObjectIdColumn + "=" + oid.ToString();
                 using (var command = new OleDbCommand(strSQL, conn))
@@ -315,7 +314,7 @@ namespace Ptv.Controls.Map.AddressMonitor
                         {
                             //If the read row is OK, create a point geometry from the XColumn and YColumn and return it
                             if (dr[0] != DBNull.Value && dr[1] != DBNull.Value)
-                                return new Point(GeoTools.SphereMercator2Wgs(new Coordinate(Convert.ToDouble(dr[0]), System.Convert.ToDouble(dr[1])), true));
+                                return new Point(GeoTools.SphereMercator2Wgs(new Coordinate(Convert.ToDouble(dr[0]), Convert.ToDouble(dr[1])), true));
                         }
                     }
                     conn.Close();
@@ -339,28 +338,28 @@ namespace Ptv.Controls.Map.AddressMonitor
                 if (!String.IsNullOrEmpty(_defintionQuery)) //If a definition query has been specified, add this as a filter on the query
                     strSQL += _defintionQuery + " AND ";
                 //Limit to the points within the boundingbox
-                strSQL += this.XColumn + " BETWEEN " + System.Convert.ToInt32(bbox.Left()).ToString() + " AND " + System.Convert.ToInt32(bbox.Right()).ToString() + " AND " + this.YColumn +
-                    " BETWEEN " + System.Convert.ToInt32(bbox.Bottom()).ToString() + " AND " + System.Convert.ToInt32(bbox.Top()).ToString() +
+                strSQL += this.XColumn + " BETWEEN " + Convert.ToInt32(bbox.Left()).ToString() + " AND " + Convert.ToInt32(bbox.Right()).ToString() + " AND " + this.YColumn +
+                    " BETWEEN " + Convert.ToInt32(bbox.Bottom()).ToString() + " AND " + Convert.ToInt32(bbox.Top()).ToString() +
                     " ORDER BY " + this.YColumn + " DESC"; // makes them appear nicely ordered on a map
 
                 using (var adapter = new OleDbDataAdapter(strSQL, conn))
                 {
                     conn.Open();
-                    System.Data.DataSet ds2 = new System.Data.DataSet();
+                    var ds2 = new DataSet();
                     adapter.Fill(ds2);
                     conn.Close();
                     if (ds2.Tables.Count > 0)
                     {
                         FeatureDataTable fdt = new FeatureDataTable(ds2.Tables[0]);
-                        foreach (System.Data.DataColumn col in ds2.Tables[0].Columns)
+                        foreach (DataColumn col in ds2.Tables[0].Columns)
                             fdt.Columns.Add(col.ColumnName, col.DataType, col.Expression);
-                        foreach (System.Data.DataRow dr in ds2.Tables[0].Rows)
+                        foreach (DataRow dr in ds2.Tables[0].Rows)
                         {
-                            SharpMap.Data.FeatureDataRow fdr = fdt.NewRow();
-                            foreach (System.Data.DataColumn col in ds2.Tables[0].Columns)
+                            FeatureDataRow fdr = fdt.NewRow();
+                            foreach (DataColumn col in ds2.Tables[0].Columns)
                                 fdr[col.ColumnName] = dr[col];
                             if (dr[this.XColumn] != DBNull.Value && dr[this.YColumn] != DBNull.Value)
-                                fdr.Geometry = new Point(GeoTools.SphereMercator2Wgs(new Coordinate(System.Convert.ToDouble(dr[this.XColumn]), System.Convert.ToDouble(dr[this.YColumn])), true));
+                                fdr.Geometry = new Point(GeoTools.SphereMercator2Wgs(new Coordinate(Convert.ToDouble(dr[this.XColumn]), Convert.ToDouble(dr[this.YColumn])), true));
                             fdt.AddRow(fdr);
                         }
                         ds.Tables.Add(fdt);
@@ -378,16 +377,18 @@ namespace Ptv.Controls.Map.AddressMonitor
                 if (!String.IsNullOrEmpty(_defintionQuery)) //If a definition query has been specified, add this as a filter on the query
                     strSQL += " WHERE " + _defintionQuery;
 
-                using (System.Data.OleDb.OleDbCommand command = new OleDbCommand(strSQL, conn))
+                using (var command = new OleDbCommand(strSQL, conn))
                 {
                     conn.Open();
                     using (var dr = command.ExecuteReader())
                     {
                         if (dr.Read())
                         {
-                            //If the read row is OK, create a point geometry from the XColumn and YColumn and return it
+                            // If the read row is OK, create a point geometry from the XColumn and YColumn and return it
                             if (dr[0] != DBNull.Value && dr[1] != DBNull.Value && dr[2] != DBNull.Value && dr[3] != DBNull.Value)
-                                return GeoTools.SphereMercator2Wgs(new Envelope(System.Convert.ToDouble(dr[0]), System.Convert.ToDouble(dr[1]), System.Convert.ToDouble(dr[2]), System.Convert.ToDouble(dr[3])), true);
+                                return GeoTools.SphereMercator2Wgs(
+                                    new Envelope(Convert.ToDouble(dr[0]), Convert.ToDouble(dr[1]), 
+                                    Convert.ToDouble(dr[2]), Convert.ToDouble(dr[3])), true);
                         }
                     }
                     conn.Close();

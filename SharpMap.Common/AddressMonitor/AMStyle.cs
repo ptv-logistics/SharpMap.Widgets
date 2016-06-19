@@ -1,10 +1,8 @@
+using SharpMap.Rendering.Thematics;
+using SharpMap.Styles;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Data.OleDb;
-using SharpMap.Rendering.Thematics;
-using Ptv.Controls.Map;
-using SharpMap.Styles;
 
 namespace Ptv.Controls.Map.AddressMonitor
 {
@@ -39,14 +37,14 @@ namespace Ptv.Controls.Map.AddressMonitor
 
         protected void InitStyle(string fileName, string bitmapBase, string password)
         {
-            using (OleDbConnection conn = new OleDbConnection(GetConnectionString(fileName, password)))
+            using (var conn = new OleDbConnection(GetConnectionString(fileName, password)))
             {
                 string select = "Select ColumnName, LowBound, Imagefile from _FilterDefinitions where FilterName = 'Standard'";
 
-                using (System.Data.OleDb.OleDbCommand command = new OleDbCommand(select, conn))
+                using (var command = new OleDbCommand(select, conn))
                 {
                     conn.Open();
-                    using (System.Data.OleDb.OleDbDataReader dr = command.ExecuteReader())
+                    using (var dr = command.ExecuteReader())
                     {
                         while (dr.Read())
                         {
@@ -82,11 +80,11 @@ namespace Ptv.Controls.Map.AddressMonitor
         // gets the display threshold from _Filterproperties - the value can only be approximated to SharpMap
         private void CalcMaxVisible(string fileName, string password)
         {
-            using (OleDbConnection conn = new OleDbConnection(GetConnectionString(fileName, password)))
+            using (var conn = new OleDbConnection(GetConnectionString(fileName, password)))
             {
                 string select = "Select DisplayMaxScale from _FilterProperties where FilterName = 'Standard'";
 
-                using (OleDbCommand command = new OleDbCommand(select, conn))
+                using (var command = new OleDbCommand(select, conn))
                 {
                     conn.Open();
                     object res = command.ExecuteScalar();
@@ -99,7 +97,7 @@ namespace Ptv.Controls.Map.AddressMonitor
 
         #region ITheme Members
 
-        public SharpMap.Styles.IStyle GetStyle(SharpMap.Data.FeatureDataRow attribute)
+        public IStyle GetStyle(SharpMap.Data.FeatureDataRow attribute)
         {
             var style = new VectorStyle();
 

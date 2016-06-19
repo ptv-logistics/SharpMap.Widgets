@@ -46,6 +46,7 @@ The difference is very important with aspect on rendering performance. The rende
 <a href="url"><img src="/Doc/RenderArchitecture.png" align="center" width="600" ></a>
 
 ### ToDos
+* Enabling/disabling SharpMap layers for Web-Sample
 * Add interaction to thin Windows-Client
 * Some dynamic filtering and styling
 * Better sample data sources

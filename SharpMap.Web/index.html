@@ -90,7 +90,8 @@
                 var layer = layers[i];
                 var hostLayer = (layer.LayerCategory == 0) ? sharpMapOverlayLayer : sharpMapTileLayer;
                 var l = new L.VirtualLayer(hostLayer, layer.Name).addTo(map);
-                virtualLeafletLayers[layer.Name] = l;
+                var caption = layer.Caption? layer.Caption : layer.Name;
+                virtualLeafletLayers[caption] = l;
             }
 
             // add controls
@@ -105,7 +106,7 @@
                 var visibileLayers = [];
                 for (var l in virtualLeafletLayers) {
                     if (virtualLeafletLayers[l].isVisible())
-                        visibileLayers.push(l);
+                        visibileLayers.push(virtualLeafletLayers[l].name);
                 };
 
                 $.ajax({

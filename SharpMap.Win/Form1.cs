@@ -67,7 +67,7 @@ namespace SharpMap.Win
         private void CheckedListBox1_ItemCheck(object sender, ItemCheckEventArgs e)
         {
             var layerName = checkedListBox1.SelectedItem.ToString();
-            var layerInfo = (from li in SampleLayers.Layers where li.Name == layerName select li).FirstOrDefault();
+            var layerInfo = (from li in SampleLayers.Layers where li.ToString() == layerName select li).FirstOrDefault();
             layerInfo.Visible = e.NewValue == CheckState.Checked;
 
             if (layerInfo.LayerCategory == LayerCategory.Point)
@@ -107,7 +107,7 @@ namespace SharpMap.Win
 
             foreach(var i in sampleInfo)
             {
-                this.checkedListBox1.Items.Add(i.Name, i.Visible);
+                this.checkedListBox1.Items.Add(i, i.Visible);
             }
 
             checkedListBox1.ItemCheck += CheckedListBox1_ItemCheck;

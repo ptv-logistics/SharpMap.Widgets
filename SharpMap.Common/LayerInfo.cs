@@ -23,6 +23,8 @@ namespace SharpMap.Common
     {
         public string Name { get; set; }
 
+        public string Caption { get; set; }
+
         public LayerCategory LayerCategory { get; set; }
 
         public string[] Themes { get; set; }
@@ -35,6 +37,11 @@ namespace SharpMap.Common
 
         [JsonIgnore]
         public Func<string, double, ILayer> LayerFactory { get; set; }
+
+        public override string ToString()
+        {
+            return string.IsNullOrEmpty(Caption) ? Name : Caption;
+        }
     }
 
     public static class LayerInfoExt

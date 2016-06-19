@@ -1,13 +1,14 @@
-﻿using Ptv.XServer.Controls.Map.Canvases;
-using Ptv.XServer.Controls.Map.Layers;
+﻿using Newtonsoft.Json;
 using Ptv.XServer.Controls.Map.Layers.Tiled;
 using Ptv.XServer.Controls.Map.Layers.Untiled;
 using Ptv.XServer.Controls.Map.TileProviders;
+using SharpMap.Common;
 using SharpMap.Data;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
+using System.Linq;
+using System.Net;
 using System.Windows.Forms;
 
 namespace SharpMap.WinThin
@@ -58,6 +59,11 @@ namespace SharpMap.WinThin
         TiledLayer bgLayer;
         public void InitializeCustomLayers()
         {
+            var str = new WebClient().DownloadString("http://localhost:60811/LayerInfoHandler.ashx");
+            var layerInfos = JsonConvert.DeserializeObject<LayerInfo[]>(str);
+
+            var fgLayers = from l in layerInfos where l.LayerCategory == LayerCategory.Point select l;
+            var bgLayers = from l in layerInfos where l.LayerCategory != LayerCategory.Point select l;
 
             bgLayer = new TiledLayer("sharpmapbg")
             {
@@ -67,16 +73,18 @@ namespace SharpMap.WinThin
                     MaxZoom = 20,
                     RequestBuilderDelegate = (x, y, level) =>
                         string.Format(
-                            "http://localhost:60811/SharpMapTilesHandler.ashx?x={1}&y={2}&z={0}", level, x, y)
+                            "http://localhost:60811/SharpMapTilesHandler.ashx?x={1}&y={2}&z={0}&layers={3}", 
+                            level, x, y, string.Join(",", from l in bgLayers select l.Name))
                 },
             };
 
             formsMap1.Layers.InsertBefore(bgLayer, "Labels");
 
-           fgLayer = new UntiledLayer("sharpmapfg")
+            fgLayer = new UntiledLayer("sharpmapfg")
             {
                 Caption = "Bus Stops",
-                UntiledProvider = new WmsProvider("http://localhost:60811/SharpMapOverlayHandler.ashx")
+                UntiledProvider = new WmsProvider(string.Format("http://localhost:60811/SharpMapOverlayHandler.ashx?layers={0}",
+                    string.Join(",", from l in fgLayers select l.Name)))
             };
 
             formsMap1.Layers.Add(fgLayer);
