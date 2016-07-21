@@ -1,6 +1,7 @@
 ﻿using ProjNet.CoordinateSystems;
 using ProjNet.CoordinateSystems.Transformations;
 using Ptv.Controls.Map.AddressMonitor;
+using Ptv.XServer.Demo.Clustering;
 using SharpMap.Common;
 using SharpMap.Data;
 using SharpMap.Layers;
@@ -13,6 +14,7 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using NetTopologySuite.Geometries;
 
 namespace Widgets
 {
@@ -112,6 +114,64 @@ namespace Widgets
         /// <returns> The collection of layers </returns>
         public static IEnumerable<LayerInfo> GetPOIs()
         {
+            // add wikipedia pois
+            var fdt = new FeatureDataTable();
+            fdt.Columns.Add("Id", typeof(int));
+            fdt.Columns.Add("Name", typeof(string));
+
+
+            var filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Data", "POI",
+                "wikilocations.csv");
+            using (var reader = new CsvFileReader(filePath, (char) 0x09))
+            {
+                int id = 0;
+
+                var row = new CsvRow();
+                while (reader.ReadRow(row))
+                {
+                    if (row.Count < 3)
+                        continue;
+
+                    double x, y;
+                    bool parsed = Double.TryParse(row[2], NumberStyles.Float, CultureInfo.InvariantCulture, out x);
+                    x = parsed ? x : Double.NaN;
+                    parsed = Double.TryParse(row[1], NumberStyles.Float, CultureInfo.InvariantCulture, out y);
+                    y = parsed ? y : Double.NaN;
+
+                    var fdr = fdt.NewRow();
+                    fdr["Id"] = id++;
+                    fdr["Name"] = row[0];
+                    fdr.Geometry = new NetTopologySuite.Geometries.Point(x, y);
+                    fdt.AddRow(fdr);
+                }
+
+            }
+            var wikiProvider = new SharpMap.Data.Providers.GeometryFeatureProvider(fdt);
+            var bitmap = new Bitmap(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Data", "POI", "Bitmaps", "wikipedia.png"));
+
+            yield return new LayerInfo
+            {
+                Name = "Wiki",
+                LayerCategory = LayerCategory.Point,
+                Visible = true,
+                LayerFactory = (theme, pixelSize) =>
+                new VectorLayer("Wiki")
+                {
+                    // set tranform to WGS84->Spherical_Mercator
+                    CoordinateTransformation = new CoordinateTransformationFactory().CreateFromCoordinateSystems(GeographicCoordinateSystem.WGS84, ProjectedCoordinateSystem.WebMercator),
+               
+                    // set the sharpmap provider for shape files as data source
+                    DataSource = wikiProvider,
+                                
+                    // use a dynamic style for thematic mapping
+                    // the lambda also takes the map instance into account (to scale the border width)
+                    Theme = new CustomTheme(row => new VectorStyle() { Symbol = bitmap }),
+
+                    // display threshold
+                    MaxVisible = 7500
+                }
+            };
+
             // find all poi-databases
             var rootPath = AppDomain.CurrentDomain.BaseDirectory + "Data\\Poi";
             var bitmapPath = rootPath + "\\Bitmaps";
@@ -133,6 +193,8 @@ namespace Widgets
                     }
                 };
             }
+
+
         }
 
         #region doc:GetPopDensStyle method

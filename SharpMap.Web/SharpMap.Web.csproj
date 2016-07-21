@@ -131,6 +131,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Data\Poi\Bitmaps\einkauf.bmp" />
+    <Content Include="Data\Poi\Bitmaps\wikipedia.png" />
     <Content Include="Data\Poi\Bitmaps\WORK.bmp" />
     <Content Include="Data\Poi\p_fd7.bmp" />
     <Content Include="Data\Poi\p_fd7.mdb" />
@@ -145,6 +146,7 @@
     <Content Include="SharpMapOverlayHandler.ashx" />
     <Content Include="SharpMapPickHandler.ashx" />
     <Content Include="LayerInfoHandler.ashx" />
+    <Content Include="Data\Poi\wikilocations.csv" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

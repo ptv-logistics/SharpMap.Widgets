@@ -26,7 +26,7 @@ namespace SharpMap.Common
             var size2 = 8;
 
             // calculate mercator units per pixel
-            var mercRadius = 6371000.0 * 2 * Math.PI;
+            var mercRadius = 6378137.0 * 2 * Math.PI;
             var pixelsPerLevel = 256 * Math.Pow(2, z);
             var mercPerPix = mercRadius / pixelsPerLevel;
 
@@ -44,6 +44,9 @@ namespace SharpMap.Common
             FeatureDataRow row = null;
             foreach (var l in fgTopDown)
             {
+                if (l.MaxVisible <= 600 * mercPerPix)
+                    continue;
+
                 // hit-test on symbols with the symbol-size envelope
                 row = HitTest(l, wgsEnvelope);
 
