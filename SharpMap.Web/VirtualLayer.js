@@ -6,7 +6,7 @@ L.VirtualLayer = L.Layer.extend({
     options: {
         attribution: '',
         minZoom: 0,
-        maxZoom: 18,
+        maxZoom: 99,
         bounds: L.latLngBounds([-85.05, -180], [85.05, 180])
     },
 

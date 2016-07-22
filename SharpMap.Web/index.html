@@ -69,12 +69,13 @@
             // add dymamic tile layer
             var myTileLayerUrl = 'SharpMapTilesHandler.ashx?x={x}&y={y}&z={z}&layers=',
             sharpMapTileLayer = new L.TileLayer(myTileLayerUrl, {
-                maxZoom: 20, minZoom: 0, zIndex: 100
+                maxZoom: 19, minZoom: 0, zIndex: 100
             });
 
             // add dynamic overlay layer
             var sharpMapOverlayLayer = new L.NonTiledLayer.WMS('SharpMapOverlayHandler.ashx', {
                 zIndex: 1,
+                minZoom: 0, maxZoom: 19,
                 opacity: 1.0,
                 layers: '',
                 format: 'image/png',
@@ -187,6 +188,7 @@
 
             var foreground = new L.NonTiledLayer.WMS(url + '?xtok=' + token, {
                 zIndex: 0,
+                minZoom: 0, maxZoom:19,
                 opacity: 1.0,
                 layers: style ? 'xmap-' + style + '-fg' : 'xmap-ajaxfg',
                 format: 'image/png',
