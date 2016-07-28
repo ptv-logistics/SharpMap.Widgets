@@ -121,6 +121,10 @@
     <Compile Include="XMapLayer.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="..\SharpMap.Web\Data\Poi\Bitmaps\wikipedia.png">
+      <Link>Data\Poi\Bitmaps\wikipedia.png</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="..\sharpmap.web\data\poi\p_fd7.ini">
       <Link>Data\Poi\p_fd7.ini</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -143,6 +147,10 @@
     </Content>
     <Content Include="..\sharpmap.web\data\shape\world_countries_boundary_file_world_2002.shx">
       <Link>Data\Shape\world_countries_boundary_file_world_2002.shx</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\SharpMap.Web\Data\Poi\wikilocations.csv">
+      <Link>Data\Poi\wikilocations.csv</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="App.config" />
