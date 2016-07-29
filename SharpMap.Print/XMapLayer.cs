@@ -23,12 +23,15 @@ namespace SharpMap.Print
 
         public string Password { get; set; }
 
+        public float Opacity { get; set; }
+
         public XMapLayer(string name, string url, MapMode mode)
         {
             m_xMapServerMode = mode;
             LayerName = name;
             m_Url = url;
             SRID = 3857; // Web_MERCATOR
+            Opacity = 1.0F;
         }
 
         public override Envelope Envelope
@@ -50,10 +53,8 @@ namespace SharpMap.Print
                 map.Envelope.TopLeft().Y * googleToPtv, map.Envelope.BottomRight().Y * googleToPtv);
 
             var r = new XMapRenderer(m_Url, m_xMapServerMode){ User = User, Password = Password };
-            var image = r.GetImage((int)envelope.Left(), (int)envelope.Top(), (int)envelope.Right(), (int)envelope.Bottom(), 
-                map.Size.Width, map.Size.Height, 0);
-
-            g.DrawImageUnscaled(image, 0, 0);
+            r.DrawImage(g, (int)envelope.Left(), (int)envelope.Top(), (int)envelope.Right(), (int)envelope.Bottom(), 
+                map.Size.Width, map.Size.Height, 0, Opacity);
         }
     } 
 }

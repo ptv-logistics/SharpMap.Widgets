@@ -1,22 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using SharpMap.Layers;
+using System.Drawing;
 using System.Net;
 using System.IO;
-using System.Net.Cache;
-using GeoAPI.Geometries;
 using SharpMap.Print.XMapServiceReference;
+using System.Drawing.Imaging;
+using Point = SharpMap.Print.XMapServiceReference.Point;
 
 namespace SharpMap.Print
 {
     /// <summary>
     /// XmapRenderer renders an xMapServer-Bitmap 
-    /// This implementation fixes several problems which occur in combination with tiling and silverlight
-    /// + it clips the request rectangles to avoid problems on the southern hemisphere
-    /// + it internally resizes the image to avoid artifacts on tile borders
-    /// + it makes the labels transparent
-    /// + it converts gif to png
     /// </summary>
     public class XMapRenderer
     {
@@ -57,7 +51,7 @@ namespace SharpMap.Print
                 catch (WebException exception)
                 {
                     // retry for 500 and 503
-                    var result = (HttpWebResponse)exception.Response;
+                    var result = (HttpWebResponse) exception.Response;
                     if (result.StatusCode == HttpStatusCode.InternalServerError ||
                         result.StatusCode == HttpStatusCode.ServiceUnavailable)
                     {
@@ -73,12 +67,13 @@ namespace SharpMap.Print
             }
         }
 
-        public Stream TryGetStream(int left, int top, int right, int bottom, int width, int height, ImageFileFormat format)
+        public Stream TryGetStream(int left, int top, int right, int bottom, int width, int height,
+            ImageFileFormat format)
         {
             var boundingBox = new BoundingBox
             {
-                leftTop = new Point { point = new PlainPoint { x = left, y = top } },
-                rightBottom = new Point { point = new PlainPoint { x = right, y = bottom } }
+                leftTop = new Point {point = new PlainPoint {x = left, y = top}},
+                rightBottom = new Point {point = new PlainPoint {x = right, y = bottom}}
             };
 
             var mapParams = new MapParams
@@ -87,7 +82,7 @@ namespace SharpMap.Print
                 useMiles = false
             };
 
-            var imageInfo = new ImageInfo { format = format, height = height, width = width };
+            var imageInfo = new ImageInfo {format = format, height = height, width = width};
 
             string profile = string.Empty;
             var layers = new List<XMapServiceReference.Layer>();
@@ -95,39 +90,39 @@ namespace SharpMap.Print
             {
                 // only streets
                 case MapMode.Street:
-                    {
-                        layers.Add(new StaticPoiLayer { name = "town", visible = false, category = -1, detailLevel = 0 });
-                        layers.Add(new StaticPoiLayer { name = "background", visible = false, category = -1, detailLevel = 0 });
+                {
+                    layers.Add(new StaticPoiLayer {name = "town", visible = false, category = -1, detailLevel = 0});
+                    layers.Add(new StaticPoiLayer {name = "background", visible = false, category = -1, detailLevel = 0});
 
-                        profile = "ajax-bg";
+                    profile = "ajax-bg";
 
-                        break;
-                    }
+                    break;
+                }
                 // only labels
                 case MapMode.Town:
-                    {
-                        profile = "ajax-fg";
+                {
+                    profile = "ajax-fg";
 
-                        break;
-                    }
+                    break;
+                }
                 // nothing
                 case MapMode.Custom:
-                    {
-                        profile = "ajax-fg";
-                        layers.Add(new StaticPoiLayer { name = "town", visible = false, category = -1, detailLevel = 0 });
-                        layers.Add(new StaticPoiLayer { name = "street", visible = false, category = -1, detailLevel = 0 });
-                        layers.Add(new StaticPoiLayer { name = "background", visible = false, category = -1, detailLevel = 0 });
+                {
+                    profile = "ajax-fg";
+                    layers.Add(new StaticPoiLayer {name = "town", visible = false, category = -1, detailLevel = 0});
+                    layers.Add(new StaticPoiLayer {name = "street", visible = false, category = -1, detailLevel = 0});
+                    layers.Add(new StaticPoiLayer {name = "background", visible = false, category = -1, detailLevel = 0});
 
-                        break;
-                    }
+                    break;
+                }
                 // only background
                 case MapMode.Background:
-                    {
-                        layers.Add(new StaticPoiLayer { name = "town", visible = false, category = -1, detailLevel = 0 });
-                        profile = "ajax-bg";
+                {
+                    layers.Add(new StaticPoiLayer {name = "town", visible = false, category = -1, detailLevel = 0});
+                    profile = "ajax-bg";
 
-                        break;
-                    }
+                    break;
+                }
             }
 
             //// add custom xmap layrs
@@ -136,35 +131,29 @@ namespace SharpMap.Print
 
             var callerContext = new CallerContext
             {
-                wrappedProperties = new CallerContextProperty[]{
-                        new CallerContextProperty{key = "CoordFormat", value="PTV_MERCATOR"},
-                        new CallerContextProperty{key = "Profile", value = profile}
-                    }
+                wrappedProperties = new CallerContextProperty[]
+                {
+                    new CallerContextProperty {key = "CoordFormat", value = "PTV_MERCATOR"},
+                    new CallerContextProperty {key = "Profile", value = profile}
+                }
             };
 
             var client = new XMapWSClient("XMapWSPort", this.url);
 
-            if(!string.IsNullOrEmpty(User) && !string.IsNullOrEmpty(Password))
+            if (!string.IsNullOrEmpty(User) && !string.IsNullOrEmpty(Password))
             {
                 client.ClientCredentials.UserName.UserName = User;
                 client.ClientCredentials.UserName.Password = Password;
             }
 
-            var map = client.renderMapBoundingBox(boundingBox, mapParams, imageInfo, layers.ToArray(), true, callerContext);
+            var map = client.renderMapBoundingBox(boundingBox, mapParams, imageInfo, layers.ToArray(), true,
+                callerContext);
 
             return new MemoryStream(map.image.rawImage);
         }
 
-        private System.Drawing.Bitmap SaveAndConvert(System.Drawing.Bitmap image)
-        {
-            // make background transparent for overlays
-            if (mapMode != MapMode.Background)
-                image.MakeTransparent(System.Drawing.Color.FromArgb(255, 254, 185));
-
-            return image;
-        }
-
-        public System.Drawing.Bitmap GetImage(int left, int top, int right, int bottom, int width, int height, int border)
+        public void DrawImage(Graphics g, int left, int top, int right, int bottom, int width, int height, int border,
+            float opacity)
         {
             if (top > bottom)
             {
@@ -173,74 +162,82 @@ namespace SharpMap.Print
                 bottom = t;
             }
 
-            if (left < minX || right > maxX || top < minY || bottom > maxY || border > 0)
+            // request must be resized or clipped
+            double leftResized, rightResized, topResized, bottomResized;
+
+            // calculate resized bounds depending on border
+            // the resize factor internally resizes requested tiles to avoid clipping problems
+            if (border > 0)
             {
-                // request must be resized or clipped
-                double leftResized, rightResized, topResized, bottomResized;
+                double resize = (double) border/width;
+                double lWidth = (right - left)*resize;
+                double lHeight = (bottom - top)*resize;
 
-                // calculate resized bounds depending on border
-                // the resize factor internally resizes requested tiles to avoid clipping problems
-                if (border > 0)
+                leftResized = (left - lWidth);
+                rightResized = (right + lWidth);
+                topResized = (top - lHeight);
+                bottomResized = (bottom + lHeight);
+            }
+            else
+            {
+                leftResized = left;
+                rightResized = right;
+                topResized = top;
+                bottomResized = bottom;
+            }
+
+            // calculate clipped bounds
+            double leftClipped = (leftResized < minX) ? minX : leftResized;
+            double rightClipped = (rightResized > maxX) ? maxX : rightResized;
+            double topClipped = (topResized < minY) ? minY : topResized;
+            double bottomClipped = (bottomResized > maxY) ? maxY : bottomResized;
+
+            // calculate corresponding pixel width and height 
+            double rWidth = width*(rightClipped - leftClipped)/(right - left);
+            double rHeight = height*(bottomClipped - topClipped)/(bottom - top);
+
+            if (rWidth < 32 || rHeight < 32)
+            {
+                // resulting image will be too small -> return
+                return;
+            }
+
+            using (var stream = GetStream(
+                (int) Math.Round(leftClipped), (int) Math.Round(topClipped), (int) Math.Round(rightClipped),
+                (int) Math.Round(bottomClipped),
+                (int) Math.Round(rWidth), (int) Math.Round(rHeight), ImageFileFormat.PNG))
+            {
+                // paste resized/clipped image on new graphics
+                using (var img = System.Drawing.Image.FromStream(stream))
                 {
-                    double resize = (double)border / width;
-                    double lWidth = (right - left) * resize;
-                    double lHeight = (bottom - top) * resize;
+                    double offsetX = (leftClipped - left)/(right - left)*width;
+                    double offsetY = (bottomClipped - bottom)/(top - bottom)*height;
 
-                    leftResized = (left - lWidth);
-                    rightResized = (right + lWidth);
-                    topResized = (top - lHeight);
-                    bottomResized = (bottom + lHeight);
-                }
-                else
-                {
-                    leftResized = left;
-                    rightResized = right;
-                    topResized = top;
-                    bottomResized = bottom;
-                }
-
-                // calculate clipped bounds
-                double leftClipped = (leftResized < minX) ? minX : leftResized;
-                double rightClipped = (rightResized > maxX) ? maxX : rightResized;
-                double topClipped = (topResized < minY) ? minY : topResized;
-                double bottomClipped = (bottomResized > maxY) ? maxY : bottomResized;
-
-                // calculate corresponding pixel width and height 
-                double rWidth = width * (rightClipped - leftClipped) / (right - left);
-                double rHeight = height * (bottomClipped - topClipped) / (bottom - top);
-
-                if (rWidth < 32 || rHeight < 32)
-                {
-                    // resulting image will be too small -> return empty image
-                    var bmp = new System.Drawing.Bitmap(width, height);
-                    return SaveAndConvert(bmp);
-                }
-                else using (System.IO.Stream stream = GetStream(
-                    (int)Math.Round(leftClipped), (int)Math.Round(topClipped), (int)Math.Round(rightClipped), (int)Math.Round(bottomClipped),
-                    (int)Math.Round(rWidth), (int)Math.Round(rHeight), ImageFileFormat.GIF))
+                    if (opacity != 1.0F)
                     {
-                        // paste resized/clipped image on new image
-                        using (var img = System.Drawing.Image.FromStream(stream))
+                        //create a color matrix object  
+                        ColorMatrix matrix = new ColorMatrix();
+
+                        //set the opacity  
+                        matrix.Matrix33 = opacity;
+
+                        using (var attributes = new ImageAttributes())
                         {
-                            var bmp = new System.Drawing.Bitmap(width, height);
 
-                            using (var g = System.Drawing.Graphics.FromImage(bmp))
-                            {
-                                double offsetX = (leftClipped - left) / (right - left) * width;
-                                double offsetY = (bottomClipped - bottom) / (top - bottom) * height;
+                            //set the color(opacity) of the image  
+                            attributes.SetColorMatrix(matrix, ColorMatrixFlag.Default, ColorAdjustType.Bitmap);
 
-                                g.DrawImageUnscaled(img, (int)Math.Round(offsetX), (int)Math.Round(offsetY));
-                            }
-
-                            return SaveAndConvert(bmp);
+                            g.DrawImage(img,
+                                new Rectangle((int) Math.Round(offsetX), (int) Math.Round(offsetY),
+                                    img.Width,
+                                    img.Height),
+                                0, 0, img.Width, img.Height, GraphicsUnit.Pixel, attributes);
                         }
                     }
-            }        
-            else using (var stream = GetStream(left, top, right, bottom, width, height, ImageFileFormat.GIF))
-                {
-                    var img = System.Drawing.Image.FromStream(stream) as System.Drawing.Bitmap;
-                        return SaveAndConvert(img);
+                    else
+                        g.DrawImageUnscaled(img, (int) Math.Round(offsetX), (int) Math.Round(offsetY));
                 }
+            }
         }
     }
 
