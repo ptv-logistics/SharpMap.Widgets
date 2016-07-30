@@ -30,7 +30,7 @@ namespace SharpMap.WinThin
 
             // this is a time-limited demo token. 
             // You need your own xServer-internet token for your application!
-            formsMap1.XMapCredentials = "xtok:953B0471-1EB8-4E1C-B170-ACDF1B04D6B5";
+            formsMap1.XMapCredentials = "xtok:10806EE8-1808-4069-A281-70EA1692CE18";
 
             // set silkysand as xMap theme
             formsMap1.XMapStyle = "silkysand";

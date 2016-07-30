@@ -16,7 +16,7 @@ namespace SharpMap.Print
         {
             // this is a time-limited demo token. 
             // You need your own xServer-internet token for your application!
-            var token = "953B0471-1EB8-4E1C-B170-ACDF1B04D6B5";
+            var token = "10806EE8-1808-4069-A281-70EA1692CE18";
 
             // bitmap size
             int width = 950;
