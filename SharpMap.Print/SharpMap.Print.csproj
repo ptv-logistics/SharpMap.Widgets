@@ -119,7 +119,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
-    <Compile Include="XMapRenderer.cs" />
     <Compile Include="XMapLayer.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -7,6 +7,7 @@ using BruTile.PreDefined;
 using BruTile.Web;
 using Tools;
 using BruTile.Cache;
+using System.Collections.Generic;
 
 namespace SharpMap.Print
 {
@@ -26,7 +27,8 @@ namespace SharpMap.Print
             var fileName = System.IO.Path.GetTempPath() + "\\Img" + Guid.NewGuid() + ".jpg";
             
             // lat/lng bounds
-            var envelope = new Envelope(6, 11, 47, 52);
+            var envelope = new Envelope(8.4, 8.5, 49, 49.1); // EU
+            // var envelope = new Envelope(6, 11, 47, 52); // KA
 
             // create our sample data layers
             var sampleInfo = Widgets.SampleLayers.Layers;
@@ -47,9 +49,15 @@ namespace SharpMap.Print
                 //{ XTok = token, Profile = "silkysand-background" }, new NullCache()), // default cache doesn't work!?
                 //new SphericalMercatorInvertedWorldSchema()), "XMAP2"));
 
+                // test for displaying traffic incidents
+                var customXMapLayers = new List<XMapServiceReference.Layer>
+                {
+//                    new XMapServiceReference.FeatureLayer {name = "PTV_TrafficIncidents", visible = true}
+                };
+
                 // xmap-bg
                 sharpMap.Layers.Add(new XMapLayer("xmap-bg", "https://api-eu-test.cloud.ptvgroup.com/xmap/ws/XMap", MapMode.Background)
-                { User = "xtok", Password = token, /* Opacity = 0.5F */ }); // set semi-opaque for hybrid view
+                { User = "xtok", Password = token, CustomXMapLayers = customXMapLayers /* Opacity = 0.5F */ }); // set semi-opaque for hybrid view
 
                 // areas
                 foreach (var l in sampleInfo.GetLayers(RenderingLayer.Background, sharpMap.PixelSize))
@@ -57,7 +65,7 @@ namespace SharpMap.Print
 
                 // xmap-fg
                 sharpMap.Layers.Add(new XMapLayer("xmap-fg", "https://api-eu-test.cloud.ptvgroup.com/xmap/ws/XMap", MapMode.Town)
-                { User = "xtok", Password = token });
+                { User = "xtok", Password = token, CustomXMapLayers = customXMapLayers });
 
                 // POIs
                 foreach (var l in sampleInfo.GetLayers(RenderingLayer.Foreground, sharpMap.PixelSize))
