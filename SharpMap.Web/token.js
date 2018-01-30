@@ -1,3 +1,3 @@
 ﻿// this is a time-limited demo token. 
 // You need your own xServer-internet token for your application!
-var token = '06DEED74-0CA6-43F1-99F3-298E4B394631';
+var token = '435A28BF-E44A-4385-A4FD-80483ACEB671';
