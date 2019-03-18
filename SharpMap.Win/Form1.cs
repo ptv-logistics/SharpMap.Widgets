@@ -24,9 +24,6 @@ namespace SharpMap.Win
         {
             InitializeComponent();
 
-            // using infinite-zoom, makes the widget less jaggy at deep zoom levels
-            Ptv.XServer.Controls.Map.GlobalOptions.InfiniteZoom = true;
-
             // using xserver-internet
             formsMap1.XMapUrl = "https://api-eu-test.cloud.ptvgroup.com/xmap/ws/XMap";
 
