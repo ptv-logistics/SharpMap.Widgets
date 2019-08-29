@@ -78,7 +78,7 @@ namespace Ptv.XServer.Demo.ShapeFile
             var ptvToGoogle = 6378137.0 / 6371000.0;
             var envelope = new Envelope(left * ptvToGoogle, right * ptvToGoogle, top * ptvToGoogle, bottom * ptvToGoogle);
 
-            // now render the imate
+            // now render the image
             return GetImageStream(envelope, width, height);
         }
 

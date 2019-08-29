@@ -151,7 +151,7 @@ namespace Widgets
 
             yield return new LayerInfo
             {
-                Name = "Wiki",
+                Name = "WikiLocationsDE",
                 LayerCategory = LayerCategory.Point,
                 Visible = true,
                 LayerFactory = (theme, pixelSize) =>
