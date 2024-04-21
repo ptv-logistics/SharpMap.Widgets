@@ -50,6 +50,8 @@ L.VirtualLayer = L.Layer.extend({
             if (this.hostLayer.virtualLayers[key])
                 visibileLayers.push(key);
 
+        map.removeLayer(this.hostLayer);
+
         if (this.hostLayer.wmsParams)
             this.hostLayer.wmsParams.layers = visibileLayers.join(',');
         else {
@@ -58,12 +60,8 @@ L.VirtualLayer = L.Layer.extend({
             this.hostLayer.setUrl(url);
         }
 
-        if (visibileLayers.length == 0)
-            map.removeLayer(this.hostLayer, false);
-        else {
+        if (visibileLayers.length > 0)
             map.addLayer(this.hostLayer);
-            this.hostLayer.redraw();
-        }
 
         return this;
     }
