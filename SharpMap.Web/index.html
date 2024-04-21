@@ -23,7 +23,6 @@
 
 <body>
     <div id="map" />
-	<script src="https://unpkg.com/jquery@3.2.1/dist/jquery.min.js"></script>
     <script src="https://unpkg.com/jquery@3.2.1/dist/jquery.min.js"></script>    
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://unpkg.com/leaflet.nontiledlayer@1.0.7/dist/NonTiledLayer.js"></script>
@@ -68,12 +67,12 @@
 
             // add dymamic tile layer
             var myTileLayerUrl = 'SharpMapTilesHandler.ashx?x={x}&y={y}&z={z}&layers=',
-            sharpMapTileLayer = new L.TileLayer(myTileLayerUrl, {
+            sharpMapTileLayer = L.tileLayer(myTileLayerUrl, {
                 maxZoom: 19, minZoom: 0, zIndex: 100
             });
 
             // add dynamic overlay layer
-            var sharpMapOverlayLayer = new L.NonTiledLayer.WMS('SharpMapOverlayHandler.ashx', {
+            var sharpMapOverlayLayer = L.nonTiledLayer.wms('SharpMapOverlayHandler.ashx', {
                 zIndex: 1,
                 minZoom: 0, maxZoom: 19,
                 opacity: 1.0,
@@ -186,7 +185,7 @@
                     subdomains: '1234'
                 });
 
-            var foreground = new L.NonTiledLayer.WMS(url + '?xtok=' + token, {
+            var foreground = L.nonTiledLayer.wms(url + '?xtok=' + token, {
                 zIndex: 0,
                 minZoom: 0, maxZoom:19,
                 opacity: 1.0,
