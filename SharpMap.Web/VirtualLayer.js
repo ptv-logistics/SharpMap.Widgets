@@ -2,7 +2,6 @@
  * L.VirtualLayer
  */
 L.VirtualLayer = L.Layer.extend({
-    includes: L.Mixin.Events,
     options: {
         attribution: '',
         minZoom: 0,
@@ -22,11 +21,6 @@ L.VirtualLayer = L.Layer.extend({
         this.name = name;
 
         L.setOptions(this, options);
-    },
-
-    addTo: function (map) {
-        map.addLayer(this);
-        return this;
     },
 
     onAdd: function (map) {
@@ -56,19 +50,18 @@ L.VirtualLayer = L.Layer.extend({
             if (this.hostLayer.virtualLayers[key])
                 visibileLayers.push(key);
 
+        map.removeLayer(this.hostLayer);
+
         if (this.hostLayer.wmsParams)
             this.hostLayer.wmsParams.layers = visibileLayers.join(',');
         else {
-            this.hostLayer._url = this.hostLayer._url.substring(0, this.hostLayer._url.indexOf("&layers="));
-            this.hostLayer._url = this.hostLayer._url + '&layers=' + visibileLayers.join(',');
+            var url = this.hostLayer._url = this.hostLayer._url.substring(0, this.hostLayer._url.indexOf("&layers="));
+            url = this.hostLayer._url + '&layers=' + visibileLayers.join(',');
+            this.hostLayer.setUrl(url);
         }
 
-        if (visibileLayers.length == 0)
-            map.removeLayer(this.hostLayer);
-        else {
+        if (visibileLayers.length > 0)
             map.addLayer(this.hostLayer);
-            this.hostLayer.redraw();
-        }
 
         return this;
     }
