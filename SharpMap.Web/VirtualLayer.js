@@ -50,18 +50,23 @@ L.VirtualLayer = L.Layer.extend({
             if (this.hostLayer.virtualLayers[key])
                 visibileLayers.push(key);
 
-        map.removeLayer(this.hostLayer);
-
-        if (this.hostLayer.wmsParams)
+        if (this.hostLayer.wmsParams) { // single-tile host-layer
             this.hostLayer.wmsParams.layers = visibileLayers.join(',');
-        else {
+            if (visibileLayers.length == 0)
+                map.removeLayer(this.hostLayer);
+            else {
+                map.addLayer(this.hostLayer);
+                this.hostLayer.redraw();
+            }
+        }
+        else { // tiled host-layer
+            map.removeLayer(this.hostLayer);
             var url = this.hostLayer._url = this.hostLayer._url.substring(0, this.hostLayer._url.indexOf("&layers="));
             url = this.hostLayer._url + '&layers=' + visibileLayers.join(',');
-            this.hostLayer.setUrl(url);
+            this.hostLayer.setUrl(url, false);
+            if (visibileLayers.length > 0)
+                map.addLayer(this.hostLayer);
         }
-
-        if (visibileLayers.length > 0)
-            map.addLayer(this.hostLayer);
 
         return this;
     }
