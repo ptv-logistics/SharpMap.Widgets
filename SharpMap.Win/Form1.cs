@@ -27,9 +27,7 @@ namespace SharpMap.Win
             // using xserver-internet
             formsMap1.XMapUrl = "https://api-eu-test.cloud.ptvgroup.com/xmap/ws/XMap";
 
-            // this is a time-limited demo token. 
-            // You need your own xServer-internet token for your application!
-            formsMap1.XMapCredentials = "xtok:B2B52B12-5271-4079-B0A3-E532C0CD1867";
+            formsMap1.XMapCredentials = "xtok:<your xserver-internet token>";
 
             // set silkysand as xMap theme
             formsMap1.XMapStyle = "silkysand";
